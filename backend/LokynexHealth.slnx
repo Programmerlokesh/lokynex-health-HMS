@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/LokynexHealth.API/LokynexHealth.API.csproj" />
+    <Project Path="src/LokynexHealth.Application/LokynexHealth.Application.csproj" />
+    <Project Path="src/LokynexHealth.Domain/LokynexHealth.Domain.csproj" />
+    <Project Path="src/LokynexHealth.Infrastructure/LokynexHealth.Infrastructure.csproj" />
+    <Project Path="src/LokynexHealth.Shared/LokynexHealth.Shared.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LokynexHealth.IntegrationTests/LokynexHealth.IntegrationTests.csproj" />
+    <Project Path="tests/LokynexHealth.UnitTests/LokynexHealth.UnitTests.csproj" />
+  </Folder>
+</Solution>
