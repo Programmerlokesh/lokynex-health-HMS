@@ -12,3 +12,8 @@ over REST, rather than a monolithic server-rendered app.
 + Frontend and backend can be developed, tested, deployed independently
 + .NET's strong typing and Clean Architecture fit backend healthcare logic well
 - Requires CORS setup, API contract discipline, and separate deployment pipelines
+
+## Version Pin (updated July 2026)
+- Backend: .NET 10 (LTS)
+- Frontend: Next.js 16.2 (LTS), React 19
+- Node.js: 22 LTS

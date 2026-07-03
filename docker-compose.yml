@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: lokynex-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: lokynex_admin
+      POSTGRES_PASSWORD: lokynex_dev_password
+      POSTGRES_DB: lokynex_health
+    ports:
+      - "5432:5432"
+    volumes:
+      - lokynex_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lokynex_admin -d lokynex_health"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:8-alpine
+    container_name: lokynex-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - lokynex_redis_data:/data
+
+volumes:
+  lokynex_pg_data:
+  lokynex_redis_data:
