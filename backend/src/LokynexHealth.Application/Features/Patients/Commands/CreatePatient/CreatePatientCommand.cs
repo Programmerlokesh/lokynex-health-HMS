@@ -1,9 +1,9 @@
-using LokynexHealth.Domain.Common;
+using MediatR;
 using LokynexHealth.Domain.Enums;
 
-namespace LokynexHealth.Domain.Entities;
+namespace LokynexHealth.Application.Features.Patients.Commands.CreatePatient;
 
-public class Patient : BaseEntity
+public class CreatePatientCommand : IRequest<Guid>
 {
     public Guid TenantId { get; set; }
     public string FullName { get; set; } = string.Empty;
@@ -12,5 +12,4 @@ public class Patient : BaseEntity
     public string PhoneNumber { get; set; } = string.Empty;
     public string? Email { get; set; }
     public string Address { get; set; } = string.Empty;
-    public string MedicalRecordNumber { get; set; } = string.Empty;
 }

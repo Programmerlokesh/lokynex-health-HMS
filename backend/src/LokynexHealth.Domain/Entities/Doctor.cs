@@ -10,6 +10,6 @@ public class Doctor : BaseEntity
     public string PhoneNumber { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public DoctorSpecialization Specialization { get; set; }
-    public string RegistrationNumber { get; set; } = string.Empty;  // NMC registration number
+    public string RegistrationNumber { get; set; } = string.Empty;
     public bool IsAvailable { get; set; } = true;
 }

@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using LokynexHealth.Domain.Entities;
+using LokynexHealth.Application.Common.Interfaces;
 
 namespace LokynexHealth.Infrastructure.Persistence;
 
-public class LokynexHealthDbContext : DbContext
+public class LokynexHealthDbContext : DbContext, IApplicationDbContext
 {
     public LokynexHealthDbContext(DbContextOptions<LokynexHealthDbContext> options)
         : base(options)
@@ -18,7 +19,6 @@ public class LokynexHealthDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Enforce required fields and sensible max lengths at the DB level
         modelBuilder.Entity<Tenant>(entity =>
         {
             entity.Property(t => t.HospitalName).IsRequired().HasMaxLength(200);
