@@ -24,6 +24,7 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
             entity.Property(t => t.HospitalName).IsRequired().HasMaxLength(200);
             entity.Property(t => t.Subdomain).IsRequired().HasMaxLength(50);
             entity.HasIndex(t => t.Subdomain).IsUnique();
+            entity.HasQueryFilter(t => !t.IsDeleted);
         });
 
         modelBuilder.Entity<Patient>(entity =>
@@ -37,6 +38,8 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
                 .WithMany()
                 .HasForeignKey(p => p.TenantId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasQueryFilter(p => !p.IsDeleted);
         });
 
         modelBuilder.Entity<Doctor>(entity =>
@@ -48,6 +51,8 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
                 .WithMany()
                 .HasForeignKey(d => d.TenantId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasQueryFilter(d => !d.IsDeleted);
         });
     }
 }

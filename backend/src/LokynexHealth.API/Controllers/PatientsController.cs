@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using LokynexHealth.Application.Features.Patients.Commands.CreatePatient;
 using LokynexHealth.Application.Features.Patients.Commands.UpdatePatient;
+using LokynexHealth.Application.Features.Patients.Commands.DeletePatient;
 using LokynexHealth.Application.Features.Patients.Queries.GetPatientById;
 using LokynexHealth.Application.Features.Patients.Queries.GetAllPatients;
 
@@ -48,6 +49,13 @@ public class PatientsController : ControllerBase
         }
 
         await _mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletePatient(Guid id)
+    {
+        await _mediator.Send(new DeletePatientCommand { Id = id });
         return NoContent();
     }
 }
