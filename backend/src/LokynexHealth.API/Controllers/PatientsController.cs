@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using LokynexHealth.Application.Features.Patients.Commands.CreatePatient;
+using LokynexHealth.Application.Features.Patients.Commands.UpdatePatient;
 using LokynexHealth.Application.Features.Patients.Queries.GetPatientById;
 using LokynexHealth.Application.Features.Patients.Queries.GetAllPatients;
 
@@ -36,5 +37,17 @@ public class PatientsController : ControllerBase
     {
         var patients = await _mediator.Send(new GetAllPatientsQuery { TenantId = tenantId });
         return Ok(patients);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdatePatient(Guid id, [FromBody] UpdatePatientCommand command)
+    {
+        if (id != command.Id)
+        {
+            return BadRequest(new { error = "Route id and body id do not match." });
+        }
+
+        await _mediator.Send(command);
+        return NoContent();
     }
 }
