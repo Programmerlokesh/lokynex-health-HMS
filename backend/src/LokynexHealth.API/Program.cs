@@ -1,3 +1,5 @@
+using FluentValidation;
+using LokynexHealth.Application.Common.Behaviors;
 using LokynexHealth.Application.Common.Interfaces;
 using LokynexHealth.Application.Features.Patients.Commands.CreatePatient;
 using LokynexHealth.Infrastructure.Persistence;
@@ -11,7 +13,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(CreatePatientCommand).Assembly));
+{
+    cfg.RegisterServicesFromAssembly(typeof(CreatePatientCommand).Assembly);
+    cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+});
+
+builder.Services.AddValidatorsFromAssembly(typeof(CreatePatientCommand).Assembly);
 
 builder.Services.AddScoped<IApplicationDbContext>(provider =>
     provider.GetRequiredService<LokynexHealthDbContext>());
