@@ -30,6 +30,7 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
         {
             entity.Property(p => p.FullName).IsRequired().HasMaxLength(200);
             entity.Property(p => p.MedicalRecordNumber).IsRequired().HasMaxLength(50);
+            entity.Property(p => p.DateOfBirth).HasColumnType("date");
             entity.HasIndex(p => new { p.TenantId, p.MedicalRecordNumber }).IsUnique();
         });
 
