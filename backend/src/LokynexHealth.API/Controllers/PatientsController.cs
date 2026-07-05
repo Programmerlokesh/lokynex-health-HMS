@@ -2,6 +2,8 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using LokynexHealth.Application.Features.Patients.Commands.CreatePatient;
+using LokynexHealth.Application.Features.Patients.Queries.GetPatientById;
+using LokynexHealth.Application.Features.Patients.Queries.GetAllPatients;
 
 namespace LokynexHealth.API.Controllers;
 
@@ -22,12 +24,26 @@ public class PatientsController : ControllerBase
         try
         {
             var patientId = await _mediator.Send(command);
-            return CreatedAtAction(nameof(CreatePatient), new { id = patientId }, new { id = patientId });
+            return CreatedAtAction(nameof(GetPatientById), new { id = patientId }, new { id = patientId });
         }
         catch (ValidationException ex)
         {
             var errors = ex.Errors.Select(e => e.ErrorMessage);
             return BadRequest(new { errors });
         }
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetPatientById(Guid id)
+    {
+        var patient = await _mediator.Send(new GetPatientByIdQuery { Id = id });
+        return patient is null ? NotFound() : Ok(patient);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllPatients([FromQuery] Guid tenantId)
+    {
+        var patients = await _mediator.Send(new GetAllPatientsQuery { TenantId = tenantId });
+        return Ok(patients);
     }
 }
