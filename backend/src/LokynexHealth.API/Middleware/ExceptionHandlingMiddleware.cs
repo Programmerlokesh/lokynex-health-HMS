@@ -40,6 +40,15 @@ public class ExceptionHandlingMiddleware
             var result = JsonSerializer.Serialize(new { error = ex.Message });
             await context.Response.WriteAsync(result);
         }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogWarning("Business rule violation: {Message}", ex.Message);
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)HttpStatusCode.Conflict;
+
+            var result = JsonSerializer.Serialize(new { error = ex.Message });
+            await context.Response.WriteAsync(result);
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "An unhandled exception occurred.");
