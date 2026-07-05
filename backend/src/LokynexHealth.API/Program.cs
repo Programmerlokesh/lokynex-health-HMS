@@ -5,6 +5,7 @@ using LokynexHealth.Application.Common.Interfaces;
 using LokynexHealth.Application.Features.Patients.Commands.CreatePatient;
 using LokynexHealth.Infrastructure.Persistence;
 using LokynexHealth.Infrastructure.Persistence.Platform;
+using LokynexHealth.Infrastructure.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,6 +34,8 @@ builder.Services.AddScoped<IPlatformDbContext>(provider =>
 
 builder.Services.AddDbContext<PlatformDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PlatformConnection")));
+
+builder.Services.AddScoped<ITenantProvisioningService, TenantProvisioningService>();
 
 var app = builder.Build();
 
