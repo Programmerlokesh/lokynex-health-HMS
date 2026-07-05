@@ -1,4 +1,3 @@
-using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using LokynexHealth.Application.Features.Doctors.Commands.CreateDoctor;
@@ -20,16 +19,8 @@ public class DoctorsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateDoctor([FromBody] CreateDoctorCommand command)
     {
-        try
-        {
-            var doctorId = await _mediator.Send(command);
-            return CreatedAtAction(nameof(GetAllDoctors), new { id = doctorId }, new { id = doctorId });
-        }
-        catch (ValidationException ex)
-        {
-            var errors = ex.Errors.Select(e => e.ErrorMessage);
-            return BadRequest(new { errors });
-        }
+        var doctorId = await _mediator.Send(command);
+        return CreatedAtAction(nameof(GetAllDoctors), new { id = doctorId }, new { id = doctorId });
     }
 
     [HttpGet]

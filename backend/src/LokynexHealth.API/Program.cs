@@ -1,4 +1,5 @@
 using FluentValidation;
+using LokynexHealth.API.Middleware;
 using LokynexHealth.Application.Common.Behaviors;
 using LokynexHealth.Application.Common.Interfaces;
 using LokynexHealth.Application.Features.Patients.Commands.CreatePatient;
@@ -27,6 +28,8 @@ builder.Services.AddDbContext<LokynexHealthDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
