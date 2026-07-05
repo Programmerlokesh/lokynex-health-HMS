@@ -6,9 +6,14 @@ namespace LokynexHealth.Infrastructure.Persistence;
 
 public class LokynexHealthDbContext : DbContext, IApplicationDbContext
 {
-    public LokynexHealthDbContext(DbContextOptions<LokynexHealthDbContext> options)
+    private readonly ITenantContext _tenantContext;
+
+    public LokynexHealthDbContext(
+        DbContextOptions<LokynexHealthDbContext> options,
+        ITenantContext tenantContext)
         : base(options)
     {
+        _tenantContext = tenantContext;
     }
 
     public DbSet<Tenant> Tenants => Set<Tenant>();
@@ -18,6 +23,9 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        var schema = _tenantContext.SchemaName ?? "hms_default";
+        modelBuilder.HasDefaultSchema(schema);
 
         modelBuilder.Entity<Tenant>(entity =>
         {

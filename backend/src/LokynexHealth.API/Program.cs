@@ -23,6 +23,8 @@ builder.Services.AddMediatR(cfg =>
 
 builder.Services.AddValidatorsFromAssembly(typeof(CreatePatientCommand).Assembly);
 
+builder.Services.AddScoped<ITenantContext, TenantContext>();
+
 builder.Services.AddScoped<IApplicationDbContext>(provider =>
     provider.GetRequiredService<LokynexHealthDbContext>());
 
@@ -40,6 +42,7 @@ builder.Services.AddScoped<ITenantProvisioningService, TenantProvisioningService
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<TenantResolutionMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

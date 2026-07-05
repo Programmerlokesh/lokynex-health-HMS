@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using LokynexHealth.Application.Common.Interfaces;
 using LokynexHealth.Application.Features.Patients.Commands.CreatePatient;
 using LokynexHealth.Domain.Entities;
 using LokynexHealth.Domain.Enums;
@@ -6,6 +7,19 @@ using LokynexHealth.Infrastructure.Persistence;
 using Xunit;
 
 namespace LokynexHealth.UnitTests.Features.Patients;
+
+// Minimal test double — unit tests don't need real multi-tenant resolution
+public class TestTenantContext : ITenantContext
+{
+    public string? SchemaName { get; private set; } = "hms_test";
+    public Guid? TenantId { get; private set; }
+
+    public void SetTenant(Guid tenantId, string schemaName)
+    {
+        TenantId = tenantId;
+        SchemaName = schemaName;
+    }
+}
 
 public class CreatePatientCommandHandlerTests
 {
@@ -15,7 +29,7 @@ public class CreatePatientCommandHandlerTests
             .UseInMemoryDatabase(Guid.NewGuid().ToString())
             .Options;
 
-        return new LokynexHealthDbContext(options);
+        return new LokynexHealthDbContext(options, new TestTenantContext());
     }
 
     private static async Task<Guid> SeedTenantAsync(LokynexHealthDbContext context)
@@ -40,7 +54,6 @@ public class CreatePatientCommandHandlerTests
     [Fact]
     public async Task Handle_ValidCommand_CreatesPatientAndReturnsId()
     {
-        // Arrange
         var context = CreateInMemoryContext();
         var tenantId = await SeedTenantAsync(context);
         var handler = new CreatePatientCommandHandler(context);
@@ -56,10 +69,8 @@ public class CreatePatientCommandHandlerTests
             Address = "Test Address"
         };
 
-        // Act
         var patientId = await handler.Handle(command, CancellationToken.None);
 
-        // Assert
         Assert.NotEqual(Guid.Empty, patientId);
 
         var savedPatient = await context.Patients.FindAsync(patientId);
@@ -71,7 +82,6 @@ public class CreatePatientCommandHandlerTests
     [Fact]
     public async Task Handle_ValidCommand_GeneratesUniqueMedicalRecordNumber()
     {
-        // Arrange
         var context = CreateInMemoryContext();
         var tenantId = await SeedTenantAsync(context);
         var handler = new CreatePatientCommandHandler(context);
@@ -96,11 +106,9 @@ public class CreatePatientCommandHandlerTests
             Address = "Address Two"
         };
 
-        // Act
         var id1 = await handler.Handle(command1, CancellationToken.None);
         var id2 = await handler.Handle(command2, CancellationToken.None);
 
-        // Assert
         var patient1 = await context.Patients.FindAsync(id1);
         var patient2 = await context.Patients.FindAsync(id2);
 
