@@ -32,12 +32,22 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
             entity.Property(p => p.MedicalRecordNumber).IsRequired().HasMaxLength(50);
             entity.Property(p => p.DateOfBirth).HasColumnType("date");
             entity.HasIndex(p => new { p.TenantId, p.MedicalRecordNumber }).IsUnique();
+
+            entity.HasOne<Tenant>()
+                .WithMany()
+                .HasForeignKey(p => p.TenantId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<Doctor>(entity =>
         {
             entity.Property(d => d.FullName).IsRequired().HasMaxLength(200);
             entity.Property(d => d.RegistrationNumber).IsRequired().HasMaxLength(50);
+
+            entity.HasOne<Tenant>()
+                .WithMany()
+                .HasForeignKey(d => d.TenantId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

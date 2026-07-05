@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using LokynexHealth.Domain.Entities;
 using LokynexHealth.Application.Common.Interfaces;
 
@@ -15,6 +16,14 @@ public class CreatePatientCommandHandler : IRequestHandler<CreatePatientCommand,
 
     public async Task<Guid> Handle(CreatePatientCommand request, CancellationToken cancellationToken)
     {
+        var tenantExists = await _context.Tenants
+            .AnyAsync(t => t.Id == request.TenantId, cancellationToken);
+
+        if (!tenantExists)
+        {
+            throw new KeyNotFoundException($"Tenant with Id '{request.TenantId}' was not found.");
+        }
+
         var mrn = $"WB-{DateTime.UtcNow.Year}-{Guid.NewGuid().ToString()[..6].ToUpper()}";
 
         var patient = new Patient
