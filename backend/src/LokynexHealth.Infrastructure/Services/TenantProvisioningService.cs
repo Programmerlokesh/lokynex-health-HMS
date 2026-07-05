@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using LokynexHealth.Application.Common.Interfaces;
@@ -18,7 +19,6 @@ public class TenantProvisioningService : ITenantProvisioningService
 
     public async Task ProvisionTenantSchemaAsync(string schemaName, CancellationToken cancellationToken)
     {
-        // Step 1: Create the raw Postgres schema
         await using var connection = new NpgsqlConnection(_connectionString);
         await connection.OpenAsync(cancellationToken);
 
@@ -27,7 +27,6 @@ public class TenantProvisioningService : ITenantProvisioningService
 
         await command.ExecuteNonQueryAsync(cancellationToken);
 
-        // Step 2: Run EF Core migrations against the new schema
         await MigrateTenantSchemaAsync(schemaName, cancellationToken);
     }
 
@@ -35,6 +34,7 @@ public class TenantProvisioningService : ITenantProvisioningService
     {
         var options = new DbContextOptionsBuilder<LokynexHealthDbContext>()
             .UseNpgsql(_connectionString)
+            .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning))
             .Options;
 
         var fixedTenantContext = new ProvisioningTenantContext(schemaName);
@@ -43,8 +43,6 @@ public class TenantProvisioningService : ITenantProvisioningService
         await context.Database.MigrateAsync(cancellationToken);
     }
 
-    // Minimal fixed-value ITenantContext, used only during provisioning
-    // to force the DbContext to target the newly created schema.
     private class ProvisioningTenantContext : ITenantContext
     {
         public string? SchemaName { get; }
@@ -57,7 +55,6 @@ public class TenantProvisioningService : ITenantProvisioningService
 
         public void SetTenant(Guid tenantId, string schemaName)
         {
-            // Not used in this fixed context
         }
     }
 }
