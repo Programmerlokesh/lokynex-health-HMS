@@ -17,6 +17,7 @@ namespace LokynexHealth.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("hms_default")
                 .HasAnnotation("ProductVersion", "10.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -68,7 +69,7 @@ namespace LokynexHealth.Infrastructure.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("Doctors");
+                    b.ToTable("Doctors", "hms_default");
                 });
 
             modelBuilder.Entity("LokynexHealth.Domain.Entities.Patient", b =>
@@ -121,7 +122,7 @@ namespace LokynexHealth.Infrastructure.Migrations
                     b.HasIndex("TenantId", "MedicalRecordNumber")
                         .IsUnique();
 
-                    b.ToTable("Patients");
+                    b.ToTable("Patients", "hms_default");
                 });
 
             modelBuilder.Entity("LokynexHealth.Domain.Entities.Tenant", b =>
@@ -175,7 +176,7 @@ namespace LokynexHealth.Infrastructure.Migrations
                     b.HasIndex("Subdomain")
                         .IsUnique();
 
-                    b.ToTable("Tenants");
+                    b.ToTable("Tenants", "hms_default");
                 });
 
             modelBuilder.Entity("LokynexHealth.Domain.Entities.Doctor", b =>
