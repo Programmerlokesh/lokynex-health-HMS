@@ -48,6 +48,10 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
     public DbSet<LabSample> LabSamples => Set<LabSample>();
     public DbSet<LabResult> LabResults => Set<LabResult>();
     public DbSet<LabCriticalAlert> LabCriticalAlerts => Set<LabCriticalAlert>();
+    public DbSet<PharmacyDrugCatalog> PharmacyDrugCatalog => Set<PharmacyDrugCatalog>();
+    public DbSet<PharmacyStockBatch> PharmacyStockBatches => Set<PharmacyStockBatch>();
+    public DbSet<PharmacySale> PharmacySales => Set<PharmacySale>();
+    public DbSet<PharmacySaleItem> PharmacySaleItems => Set<PharmacySaleItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -59,6 +63,7 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
         ConfigureDoctorOpd(modelBuilder);
         ConfigureBilling(modelBuilder);
         ConfigureLaboratory(modelBuilder);
+        ConfigurePharmacy(modelBuilder);
         modelBuilder.ConfigureDocsSchemaTables("hms");
 
         UseSnakeCaseNames(modelBuilder);
@@ -405,6 +410,68 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
         });
     }
 
+
+    private static void ConfigurePharmacy(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<PharmacyDrugCatalog>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: false, hasUpdatedAt: false);
+            entity.ToTable("pharmacy_drug_catalog");
+            entity.Property(d => d.DrugName).IsRequired().HasMaxLength(200);
+            entity.Property(d => d.GenericName).HasMaxLength(200);
+            entity.Property(d => d.HsnCode).HasMaxLength(15);
+            entity.Property(d => d.GstRatePct).HasColumnType("numeric(4,2)");
+            entity.Property(d => d.ScheduleFlag).HasEnumConversion();
+            entity.Property(d => d.UnitOfMeasure).HasMaxLength(20);
+        });
+
+        modelBuilder.Entity<PharmacyStockBatch>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: false, hasUpdatedAt: false);
+            entity.ToTable("pharmacy_stock_batches");
+            entity.Property(b => b.BatchNumber).IsRequired().HasMaxLength(50);
+            entity.Property(b => b.ExpiryDate).HasColumnType("date");
+            entity.Property(b => b.QuantityReceived).HasColumnType("numeric(10,2)");
+            entity.Property(b => b.QuantityOnHand).HasColumnType("numeric(10,2)");
+            entity.Property(b => b.PurchasePrice).HasColumnType("numeric(10,2)");
+            entity.Property(b => b.Mrp).HasColumnType("numeric(10,2)");
+            entity.Property(b => b.SupplierName).HasMaxLength(200);
+            entity.HasIndex(b => new { b.DrugId, b.ExpiryDate });
+            entity.HasOne<PharmacyDrugCatalog>().WithMany().HasForeignKey(b => b.DrugId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<PharmacySale>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: false, hasUpdatedAt: false);
+            entity.ToTable("pharmacy_sales");
+            entity.Property(s => s.InvoiceNumber).IsRequired().HasMaxLength(30);
+            entity.Property(s => s.Subtotal).HasColumnType("numeric(10,2)");
+            entity.Property(s => s.CgstAmount).HasColumnType("numeric(10,2)");
+            entity.Property(s => s.SgstAmount).HasColumnType("numeric(10,2)");
+            entity.Property(s => s.TotalAmount).HasColumnType("numeric(10,2)");
+            entity.Property(s => s.PaymentStatus).HasEnumConversion();
+            entity.Property(s => s.PaymentMethod).HasConversion(
+                v => v == null ? null : v.Value.ToString().ToLowerInvariant(),
+                v => v == null ? null : Enum.Parse<PaymentMethod>(v, true));
+            entity.Property(s => s.EwayBillNumber).HasMaxLength(50);
+            entity.HasIndex(s => s.InvoiceNumber).IsUnique();
+            entity.HasIndex(s => s.PatientId);
+            entity.HasOne<Patient>().WithMany().HasForeignKey(s => s.PatientId).OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<PharmacySaleItem>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: false, hasUpdatedAt: false);
+            entity.ToTable("pharmacy_sale_items");
+            entity.Property(i => i.Quantity).HasColumnType("numeric(10,2)");
+            entity.Property(i => i.UnitPrice).HasColumnType("numeric(10,2)");
+            entity.Property(i => i.GstAmount).HasColumnType("numeric(10,2)");
+            entity.Property(i => i.LineTotal).HasColumnType("numeric(10,2)");
+            entity.HasOne<PharmacySale>().WithMany().HasForeignKey(i => i.SaleId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne<PharmacyDrugCatalog>().WithMany().HasForeignKey(i => i.DrugId).OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne<PharmacyStockBatch>().WithMany().HasForeignKey(i => i.BatchId).OnDelete(DeleteBehavior.Restrict);
+        });
+    }
     private static void ConfigureBase<TEntity>(
         EntityTypeBuilder<TEntity> entity,
         bool hasCreatedAt,

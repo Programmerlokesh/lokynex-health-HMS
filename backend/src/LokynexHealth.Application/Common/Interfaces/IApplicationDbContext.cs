@@ -30,5 +30,9 @@ public interface IApplicationDbContext
     DbSet<LabSample> LabSamples { get; }
     DbSet<LabResult> LabResults { get; }
     DbSet<LabCriticalAlert> LabCriticalAlerts { get; }
+    DbSet<PharmacyDrugCatalog> PharmacyDrugCatalog { get; }
+    DbSet<PharmacyStockBatch> PharmacyStockBatches { get; }
+    DbSet<PharmacySale> PharmacySales { get; }
+    DbSet<PharmacySaleItem> PharmacySaleItems { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
