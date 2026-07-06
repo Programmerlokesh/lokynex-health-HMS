@@ -42,6 +42,7 @@ builder.Services.AddDbContext<PlatformDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PlatformConnection")));
 
 builder.Services.AddScoped<ITenantProvisioningService, TenantProvisioningService>();
+builder.Services.AddSingleton<IModuleSchemaService, ModuleSchemaService>();
 builder.Services.AddScoped<IGenericTenantDataService, GenericTenantDataService>();
 
 var app = builder.Build();
