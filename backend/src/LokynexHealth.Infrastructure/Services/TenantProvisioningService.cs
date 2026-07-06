@@ -23,16 +23,15 @@ public class TenantProvisioningService : ITenantProvisioningService
         await using var connection = new NpgsqlConnection(_connectionString);
         await connection.OpenAsync(cancellationToken);
 
-        await using var command = new NpgsqlCommand(
+        await using var createSchemaCommand = new NpgsqlCommand(
             $"CREATE SCHEMA IF NOT EXISTS \"{schemaName}\";", connection);
+        await createSchemaCommand.ExecuteNonQueryAsync(cancellationToken);
 
-        await command.ExecuteNonQueryAsync(cancellationToken);
-
-        await CreateTenantSchemaTablesAsync(schemaName, cancellationToken);
-    }
-
-    private async Task CreateTenantSchemaTablesAsync(string schemaName, CancellationToken cancellationToken)
-    {
+        // Generate the CREATE TABLE script directly from the current model
+        // (which is schema-aware via ITenantContext + TenantModelCacheKeyFactory),
+        // then execute it explicitly. This bypasses EnsureCreated's
+        // "does the database exist" check, which is a no-op here since
+        // the physical database (lokynex_health) already exists.
         var options = new DbContextOptionsBuilder<LokynexHealthDbContext>()
             .UseNpgsql(_connectionString)
             .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning))
@@ -43,11 +42,10 @@ public class TenantProvisioningService : ITenantProvisioningService
 
         await using var context = new LokynexHealthDbContext(options, fixedTenantContext);
 
-        // EnsureCreated builds DDL directly from the current dynamic model
-        // (respecting HasDefaultSchema at runtime), unlike Migrate() which
-        // replays compiled migration code with a schema name baked in at
-        // generation time.
-        await context.Database.EnsureCreatedAsync(cancellationToken);
+        var createScript = context.Database.GenerateCreateScript();
+
+        await using var createTablesCommand = new NpgsqlCommand(createScript, connection);
+        await createTablesCommand.ExecuteNonQueryAsync(cancellationToken);
     }
 
     private class ProvisioningTenantContext : ITenantContext
