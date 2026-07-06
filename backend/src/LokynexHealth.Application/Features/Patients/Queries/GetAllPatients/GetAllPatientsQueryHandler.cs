@@ -24,10 +24,10 @@ public class GetAllPatientsQueryHandler : IRequestHandler<GetAllPatientsQuery, L
                 FullName = p.FullName,
                 DateOfBirth = p.DateOfBirth,
                 Gender = p.Gender.ToString(),
-                PhoneNumber = p.PhoneNumber,
+                Mobile = p.Mobile,
                 Email = p.Email,
                 Address = p.Address,
-                MedicalRecordNumber = p.MedicalRecordNumber
+                Uhid = p.Uhid
             })
             .ToListAsync(cancellationToken);
     }

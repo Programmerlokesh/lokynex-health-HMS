@@ -9,5 +9,5 @@ public class BillingPayment : BaseEntity
     public decimal Amount { get; set; }
     public PaymentMethod Method { get; set; }
     public string? ReferenceNumber { get; set; }
-    public DateTime PaidAt { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset PaidAt { get; set; } = DateTimeOffset.UtcNow;
 }

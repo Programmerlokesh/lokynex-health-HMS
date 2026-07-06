@@ -1,5 +1,6 @@
 using MediatR;
 using LokynexHealth.Application.Common.Interfaces;
+using LokynexHealth.Domain.Enums;
 
 namespace LokynexHealth.Application.Features.Patients.Commands.DeletePatient;
 
@@ -21,7 +22,7 @@ public class DeletePatientCommandHandler : IRequestHandler<DeletePatientCommand,
             throw new KeyNotFoundException($"Patient with Id '{request.Id}' was not found.");
         }
 
-        patient.IsDeleted = true;
+        patient.Status = RecordStatus.Inactive;
         patient.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);

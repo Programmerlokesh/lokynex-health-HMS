@@ -15,17 +15,17 @@ public class CreatePatientCommandHandler : IRequestHandler<CreatePatientCommand,
 
     public async Task<Guid> Handle(CreatePatientCommand request, CancellationToken cancellationToken)
     {
-        var mrn = $"WB-{DateTime.UtcNow.Year}-{Guid.NewGuid().ToString()[..6].ToUpper()}";
+        var uhid = $"WB-{DateTime.UtcNow.Year}-{Guid.NewGuid().ToString()[..6].ToUpper()}";
 
         var patient = new Patient
         {
             FullName = request.FullName,
-            DateOfBirth = request.DateOfBirth,
+            DateOfBirth = DateOnly.FromDateTime(request.DateOfBirth),
             Gender = request.Gender,
-            PhoneNumber = request.PhoneNumber,
+            Mobile = request.PhoneNumber,
             Email = request.Email,
             Address = request.Address,
-            MedicalRecordNumber = mrn
+            Uhid = uhid
         };
 
         _context.Patients.Add(patient);

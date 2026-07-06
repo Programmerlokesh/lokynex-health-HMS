@@ -1,0 +1,235 @@
+Column 'AiSuggestion' on table 'ai_interaction_log' missing in SQL docs (EF property: AiSuggestion).
+Column 'ConfidenceScore' on table 'ai_interaction_log' missing in SQL docs (EF property: ConfidenceScore).
+Column 'CreatedAt' on table 'ai_interaction_log' missing in SQL docs (EF property: CreatedAt).
+Column 'FeatureName' on table 'ai_interaction_log' missing in SQL docs (EF property: FeatureName).
+Column 'InputPayload' on table 'ai_interaction_log' missing in SQL docs (EF property: InputPayload).
+Column 'ModelName' on table 'ai_interaction_log' missing in SQL docs (EF property: ModelName).
+Column 'ModelVersion' on table 'ai_interaction_log' missing in SQL docs (EF property: ModelVersion).
+Column 'ModuleName' on table 'ai_interaction_log' missing in SQL docs (EF property: ModuleName).
+Column 'OverrideReason' on table 'ai_interaction_log' missing in SQL docs (EF property: OverrideReason).
+Column 'PhiSentExternally' on table 'ai_interaction_log' missing in SQL docs (EF property: PhiSentExternally).
+Column 'ReviewStatus' on table 'ai_interaction_log' missing in SQL docs (EF property: ReviewStatus).
+Column 'ReviewedByStaffId' on table 'ai_interaction_log' missing in SQL docs (EF property: ReviewedByStaffId).
+Column 'SourceRecordId' on table 'ai_interaction_log' missing in SQL docs (EF property: SourceRecordId).
+Column 'SourceRecordTable' on table 'ai_interaction_log' missing in SQL docs (EF property: SourceRecordTable).
+Column 'ApprovedAmount' on table 'billing_claims' missing in SQL docs (EF property: ApprovedAmount).
+Column 'ClaimNumber' on table 'billing_claims' missing in SQL docs (EF property: ClaimNumber).
+Column 'ClaimType' on table 'billing_claims' missing in SQL docs (EF property: ClaimType).
+Column 'ClaimedAmount' on table 'billing_claims' missing in SQL docs (EF property: ClaimedAmount).
+Column 'InvoiceId' on table 'billing_claims' missing in SQL docs (EF property: InvoiceId).
+Column 'PatientInsuranceId' on table 'billing_claims' missing in SQL docs (EF property: PatientInsuranceId).
+Column 'SettledAt' on table 'billing_claims' missing in SQL docs (EF property: SettledAt).
+Column 'SubmittedAt' on table 'billing_claims' missing in SQL docs (EF property: SubmittedAt).
+Column 'AdmissionId' on table 'billing_invoices' missing in SQL docs (EF property: AdmissionId).
+Column 'CgstAmount' on table 'billing_invoices' missing in SQL docs (EF property: CgstAmount).
+Column 'CreatedAt' on table 'billing_invoices' missing in SQL docs (EF property: CreatedAt).
+Column 'DiscountAmount' on table 'billing_invoices' missing in SQL docs (EF property: DiscountAmount).
+Column 'EwayBillNumber' on table 'billing_invoices' missing in SQL docs (EF property: EwayBillNumber).
+Column 'IgstAmount' on table 'billing_invoices' missing in SQL docs (EF property: IgstAmount).
+Column 'InvoiceDate' on table 'billing_invoices' missing in SQL docs (EF property: InvoiceDate).
+Column 'InvoiceNumber' on table 'billing_invoices' missing in SQL docs (EF property: InvoiceNumber).
+Column 'PatientId' on table 'billing_invoices' missing in SQL docs (EF property: PatientId).
+Column 'PaymentStatus' on table 'billing_invoices' missing in SQL docs (EF property: PaymentStatus).
+Column 'SgstAmount' on table 'billing_invoices' missing in SQL docs (EF property: SgstAmount).
+Column 'TotalAmount' on table 'billing_invoices' missing in SQL docs (EF property: TotalAmount).
+Column 'GstRatePct' on table 'billing_invoice_items' missing in SQL docs (EF property: GstRatePct).
+Column 'HsnSacCode' on table 'billing_invoice_items' missing in SQL docs (EF property: HsnSacCode).
+Column 'InvoiceId' on table 'billing_invoice_items' missing in SQL docs (EF property: InvoiceId).
+Column 'LineTotal' on table 'billing_invoice_items' missing in SQL docs (EF property: LineTotal).
+Column 'SourceModule' on table 'billing_invoice_items' missing in SQL docs (EF property: SourceModule).
+Column 'SourceRecordId' on table 'billing_invoice_items' missing in SQL docs (EF property: SourceRecordId).
+Column 'UnitPrice' on table 'billing_invoice_items' missing in SQL docs (EF property: UnitPrice).
+Column 'InvoiceId' on table 'billing_payments' missing in SQL docs (EF property: InvoiceId).
+Column 'PaidAt' on table 'billing_payments' missing in SQL docs (EF property: PaidAt).
+Column 'ReferenceNumber' on table 'billing_payments' missing in SQL docs (EF property: ReferenceNumber).
+Column 'EffectiveFrom' on table 'billing_rate_masters' missing in SQL docs (EF property: EffectiveFrom).
+Column 'EffectiveTo' on table 'billing_rate_masters' missing in SQL docs (EF property: EffectiveTo).
+Column 'PackageCode' on table 'billing_rate_masters' missing in SQL docs (EF property: PackageCode).
+Column 'SchemeName' on table 'billing_rate_masters' missing in SQL docs (EF property: SchemeName).
+Column 'ServiceDescription' on table 'billing_rate_masters' missing in SQL docs (EF property: ServiceDescription).
+Column 'AdmissionId' on table 'billing_room_charges' missing in SQL docs (EF property: AdmissionId).
+Column 'BedId' on table 'billing_room_charges' missing in SQL docs (EF property: BedId).
+Column 'ChargeFrom' on table 'billing_room_charges' missing in SQL docs (EF property: ChargeFrom).
+Column 'ChargeTo' on table 'billing_room_charges' missing in SQL docs (EF property: ChargeTo).
+Column 'ComputedAmount' on table 'billing_room_charges' missing in SQL docs (EF property: ComputedAmount).
+Column 'DailyRate' on table 'billing_room_charges' missing in SQL docs (EF property: DailyRate).
+Column 'InvoiceItemId' on table 'billing_room_charges' missing in SQL docs (EF property: InvoiceItemId).
+Column 'AadhaarPkiCertRef' on table 'doctors' missing in SQL docs (EF property: AadhaarPkiCertRef).
+Column 'CreatedAt' on table 'doctors' missing in SQL docs (EF property: CreatedAt).
+Column 'EmployeeId' on table 'doctors' missing in SQL docs (EF property: EmployeeId).
+Column 'FullName' on table 'doctors' missing in SQL docs (EF property: FullName).
+Column 'IsActive' on table 'doctors' missing in SQL docs (EF property: IsActive).
+Column 'NmcRegistrationNo' on table 'doctors' missing in SQL docs (EF property: NmcRegistrationNo).
+Column 'AiLogId' on table 'opd_diagnoses' missing in SQL docs (EF property: AiLogId).
+Column 'AiSuggested' on table 'opd_diagnoses' missing in SQL docs (EF property: AiSuggested).
+Column 'CreatedAt' on table 'opd_diagnoses' missing in SQL docs (EF property: CreatedAt).
+Column 'Icd10Code' on table 'opd_diagnoses' missing in SQL docs (EF property: Icd10Code).
+Column 'Icd10Description' on table 'opd_diagnoses' missing in SQL docs (EF property: Icd10Description).
+Column 'IsPrimary' on table 'opd_diagnoses' missing in SQL docs (EF property: IsPrimary).
+Column 'VisitId' on table 'opd_diagnoses' missing in SQL docs (EF property: VisitId).
+Column 'FulfilledReferenceId' on table 'opd_investigation_orders' missing in SQL docs (EF property: FulfilledReferenceId).
+Column 'OrderType' on table 'opd_investigation_orders' missing in SQL docs (EF property: OrderType).
+Column 'OrderedAt' on table 'opd_investigation_orders' missing in SQL docs (EF property: OrderedAt).
+Column 'TestOrStudyName' on table 'opd_investigation_orders' missing in SQL docs (EF property: TestOrStudyName).
+Column 'VisitId' on table 'opd_investigation_orders' missing in SQL docs (EF property: VisitId).
+Column 'AiDrafted' on table 'opd_soap_notes' missing in SQL docs (EF property: AiDrafted).
+Column 'AiLogId' on table 'opd_soap_notes' missing in SQL docs (EF property: AiLogId).
+Column 'CreatedAt' on table 'opd_soap_notes' missing in SQL docs (EF property: CreatedAt).
+Column 'FinalizedByDoctor' on table 'opd_soap_notes' missing in SQL docs (EF property: FinalizedByDoctor).
+Column 'SourceLanguage' on table 'opd_soap_notes' missing in SQL docs (EF property: SourceLanguage).
+Column 'VisitId' on table 'opd_soap_notes' missing in SQL docs (EF property: VisitId).
+Column 'CalledAt' on table 'opd_token_queue' missing in SQL docs (EF property: CalledAt).
+Column 'CheckedInAt' on table 'opd_token_queue' missing in SQL docs (EF property: CheckedInAt).
+Column 'DoctorId' on table 'opd_token_queue' missing in SQL docs (EF property: DoctorId).
+Column 'PatientId' on table 'opd_token_queue' missing in SQL docs (EF property: PatientId).
+Column 'QueueDate' on table 'opd_token_queue' missing in SQL docs (EF property: QueueDate).
+Column 'TokenNumber' on table 'opd_token_queue' missing in SQL docs (EF property: TokenNumber).
+Column 'ChiefComplaint' on table 'opd_visits' missing in SQL docs (EF property: ChiefComplaint).
+Column 'DoctorId' on table 'opd_visits' missing in SQL docs (EF property: DoctorId).
+Column 'EsignQrCodeRef' on table 'opd_visits' missing in SQL docs (EF property: EsignQrCodeRef).
+Column 'PatientId' on table 'opd_visits' missing in SQL docs (EF property: PatientId).
+Column 'SchemeTag' on table 'opd_visits' missing in SQL docs (EF property: SchemeTag).
+Column 'SignedOff' on table 'opd_visits' missing in SQL docs (EF property: SignedOff).
+Column 'SignedOffAt' on table 'opd_visits' missing in SQL docs (EF property: SignedOffAt).
+Column 'TokenId' on table 'opd_visits' missing in SQL docs (EF property: TokenId).
+Column 'VisitEndedAt' on table 'opd_visits' missing in SQL docs (EF property: VisitEndedAt).
+Column 'VisitNumber' on table 'opd_visits' missing in SQL docs (EF property: VisitNumber).
+Column 'VisitStartedAt' on table 'opd_visits' missing in SQL docs (EF property: VisitStartedAt).
+Column 'AadhaarLast4' on table 'patients' missing in SQL docs (EF property: AadhaarLast4).
+Column 'AadhaarNumberEnc' on table 'patients' missing in SQL docs (EF property: AadhaarNumberEnc).
+Column 'AbhaId' on table 'patients' missing in SQL docs (EF property: AbhaId).
+Column 'AltMobile' on table 'patients' missing in SQL docs (EF property: AltMobile).
+Column 'BloodGroup' on table 'patients' missing in SQL docs (EF property: BloodGroup).
+Column 'CreatedAt' on table 'patients' missing in SQL docs (EF property: CreatedAt).
+Column 'DateOfBirth' on table 'patients' missing in SQL docs (EF property: DateOfBirth).
+Column 'FullName' on table 'patients' missing in SQL docs (EF property: FullName).
+Column 'IsDuplicateOf' on table 'patients' missing in SQL docs (EF property: IsDuplicateOf).
+Column 'PanNumber' on table 'patients' missing in SQL docs (EF property: PanNumber).
+Column 'PinCode' on table 'patients' missing in SQL docs (EF property: PinCode).
+Column 'PreferredLanguage' on table 'patients' missing in SQL docs (EF property: PreferredLanguage).
+Column 'RegisteredAtTenantBranch' on table 'patients' missing in SQL docs (EF property: RegisteredAtTenantBranch).
+Column 'UpdatedAt' on table 'patients' missing in SQL docs (EF property: UpdatedAt).
+Column 'CapturedVia' on table 'patient_consents' missing in SQL docs (EF property: CapturedVia).
+Column 'ConsentType' on table 'patient_consents' missing in SQL docs (EF property: ConsentType).
+Column 'ExpiresAt' on table 'patient_consents' missing in SQL docs (EF property: ExpiresAt).
+Column 'GrantedAt' on table 'patient_consents' missing in SQL docs (EF property: GrantedAt).
+Column 'IpAddress' on table 'patient_consents' missing in SQL docs (EF property: IpAddress).
+Column 'PatientId' on table 'patient_consents' missing in SQL docs (EF property: PatientId).
+Column 'RevokedAt' on table 'patient_consents' missing in SQL docs (EF property: RevokedAt).
+Column 'DocumentType' on table 'patient_documents' missing in SQL docs (EF property: DocumentType).
+Column 'FileUrl' on table 'patient_documents' missing in SQL docs (EF property: FileUrl).
+Column 'OcrConfidence' on table 'patient_documents' missing in SQL docs (EF property: OcrConfidence).
+Column 'OcrExtractedJson' on table 'patient_documents' missing in SQL docs (EF property: OcrExtractedJson).
+Column 'PatientId' on table 'patient_documents' missing in SQL docs (EF property: PatientId).
+Column 'UploadedAt' on table 'patient_documents' missing in SQL docs (EF property: UploadedAt).
+Column 'CreatedAt' on table 'patient_insurance' missing in SQL docs (EF property: CreatedAt).
+Column 'EligibilityCheckedAt' on table 'patient_insurance' missing in SQL docs (EF property: EligibilityCheckedAt).
+Column 'EligibilityVerified' on table 'patient_insurance' missing in SQL docs (EF property: EligibilityVerified).
+Column 'InsuranceType' on table 'patient_insurance' missing in SQL docs (EF property: InsuranceType).
+Column 'PatientId' on table 'patient_insurance' missing in SQL docs (EF property: PatientId).
+Column 'SchemeNumber' on table 'patient_insurance' missing in SQL docs (EF property: SchemeNumber).
+Column 'TpaName' on table 'patient_insurance' missing in SQL docs (EF property: TpaName).
+Column 'ValidFrom' on table 'patient_insurance' missing in SQL docs (EF property: ValidFrom).
+Column 'ValidTo' on table 'patient_insurance' missing in SQL docs (EF property: ValidTo).
+Column 'DoctorId' on table 'prescriptions' missing in SQL docs (EF property: DoctorId).
+Column 'IssuedAt' on table 'prescriptions' missing in SQL docs (EF property: IssuedAt).
+Column 'PatientId' on table 'prescriptions' missing in SQL docs (EF property: PatientId).
+Column 'PrescriptionNumber' on table 'prescriptions' missing in SQL docs (EF property: PrescriptionNumber).
+Column 'PushedToAbha' on table 'prescriptions' missing in SQL docs (EF property: PushedToAbha).
+Column 'PushedToPharmacyQueue' on table 'prescriptions' missing in SQL docs (EF property: PushedToPharmacyQueue).
+Column 'VisitId' on table 'prescriptions' missing in SQL docs (EF property: VisitId).
+Column 'AiAutocompleted' on table 'prescription_items' missing in SQL docs (EF property: AiAutocompleted).
+Column 'AiLogId' on table 'prescription_items' missing in SQL docs (EF property: AiLogId).
+Column 'AllergyWarning' on table 'prescription_items' missing in SQL docs (EF property: AllergyWarning).
+Column 'DrugName' on table 'prescription_items' missing in SQL docs (EF property: DrugName).
+Column 'DurationDays' on table 'prescription_items' missing in SQL docs (EF property: DurationDays).
+Column 'InteractionChecked' on table 'prescription_items' missing in SQL docs (EF property: InteractionChecked).
+Column 'InteractionWarning' on table 'prescription_items' missing in SQL docs (EF property: InteractionWarning).
+Column 'PrescriptionId' on table 'prescription_items' missing in SQL docs (EF property: PrescriptionId).
+Column 'RxnormCode' on table 'prescription_items' missing in SQL docs (EF property: RxnormCode).
+Column 'ScheduleFlag' on table 'prescription_items' missing in SQL docs (EF property: ScheduleFlag).
+Table 'superadmin.internal_users' exists in SQL docs but not in EF model.
+Table 'superadmin.tenants' exists in SQL docs but not in EF model.
+Table 'superadmin.tenant_admins' exists in SQL docs but not in EF model.
+Table 'superadmin.module_catalog' exists in SQL docs but not in EF model.
+Table 'superadmin.tenant_modules' exists in SQL docs but not in EF model.
+Table 'superadmin.bundles' exists in SQL docs but not in EF model.
+Table 'superadmin.subscriptions' exists in SQL docs but not in EF model.
+Table 'superadmin.invoices' exists in SQL docs but not in EF model.
+Table 'superadmin.payments' exists in SQL docs but not in EF model.
+Table 'superadmin.tenant_health_snapshots' exists in SQL docs but not in EF model.
+Table 'superadmin.audit_logs' exists in SQL docs but not in EF model.
+Table 'hms.lab_test_catalog' exists in SQL docs but not in EF model.
+Table 'hms.lab_orders' exists in SQL docs but not in EF model.
+Table 'hms.lab_order_tests' exists in SQL docs but not in EF model.
+Table 'hms.lab_samples' exists in SQL docs but not in EF model.
+Table 'hms.lab_results' exists in SQL docs but not in EF model.
+Table 'hms.lab_critical_alerts' exists in SQL docs but not in EF model.
+Table 'hms.pharmacy_drug_catalog' exists in SQL docs but not in EF model.
+Table 'hms.pharmacy_stock_batches' exists in SQL docs but not in EF model.
+Table 'hms.pharmacy_sales' exists in SQL docs but not in EF model.
+Table 'hms.pharmacy_sale_items' exists in SQL docs but not in EF model.
+Table 'hms.pharmacy_reorder_suggestions' exists in SQL docs but not in EF model.
+Table 'hms.pharmacy_claim_fraud_flags' exists in SQL docs but not in EF model.
+Table 'hms.wards' exists in SQL docs but not in EF model.
+Table 'hms.beds' exists in SQL docs but not in EF model.
+Table 'hms.admissions' exists in SQL docs but not in EF model.
+Table 'hms.nursing_assessments' exists in SQL docs but not in EF model.
+Table 'hms.bed_transfers' exists in SQL docs but not in EF model.
+Table 'hms.housekeeping_tasks' exists in SQL docs but not in EF model.
+Table 'hms.bed_demand_forecasts' exists in SQL docs but not in EF model.
+Table 'hms.icu_admissions' exists in SQL docs but not in EF model.
+Table 'hms.icu_vitals' exists in SQL docs but not in EF model.
+Table 'hms.icu_ai_scores' exists in SQL docs but not in EF model.
+Table 'hms.icu_ventilator_records' exists in SQL docs but not in EF model.
+Table 'hms.icu_io_charts' exists in SQL docs but not in EF model.
+Table 'hms.er_visits' exists in SQL docs but not in EF model.
+Table 'hms.er_triage' exists in SQL docs but not in EF model.
+Table 'hms.er_mlc_records' exists in SQL docs but not in EF model.
+Table 'hms.er_critical_alerts' exists in SQL docs but not in EF model.
+Table 'hms.er_ambulance_calls' exists in SQL docs but not in EF model.
+Table 'hms.nabh_indicator_definitions' exists in SQL docs but not in EF model.
+Table 'hms.nabh_indicator_logs' exists in SQL docs but not in EF model.
+Table 'hms.report_definitions' exists in SQL docs but not in EF model.
+Table 'hms.report_exports' exists in SQL docs but not in EF model.
+Table 'hms.dpdp_audit_log' exists in SQL docs but not in EF model.
+Table 'hms.fhir_export_log' exists in SQL docs but not in EF model.
+Table 'hms.ot_rooms' exists in SQL docs but not in EF model.
+Table 'hms.ot_bookings' exists in SQL docs but not in EF model.
+Table 'hms.ot_staff_allocation' exists in SQL docs but not in EF model.
+Table 'hms.ot_consent' exists in SQL docs but not in EF model.
+Table 'hms.ot_safety_checklist' exists in SQL docs but not in EF model.
+Table 'hms.ot_intra_op_notes' exists in SQL docs but not in EF model.
+Table 'hms.ot_post_op_recovery' exists in SQL docs but not in EF model.
+Table 'hms.ot_implant_consumable_usage' exists in SQL docs but not in EF model.
+Table 'hms.ot_consumable_forecasts' exists in SQL docs but not in EF model.
+Table 'hms.blood_donors' exists in SQL docs but not in EF model.
+Table 'hms.donor_eligibility_screening' exists in SQL docs but not in EF model.
+Table 'hms.blood_units' exists in SQL docs but not in EF model.
+Table 'hms.blood_testing_log' exists in SQL docs but not in EF model.
+Table 'hms.blood_crossmatch_requests' exists in SQL docs but not in EF model.
+Table 'hms.blood_issue_records' exists in SQL docs but not in EF model.
+Table 'hms.blood_demand_forecasts' exists in SQL docs but not in EF model.
+Table 'hms.radiology_orders' exists in SQL docs but not in EF model.
+Table 'hms.radiology_modality_worklist' exists in SQL docs but not in EF model.
+Table 'hms.radiology_dicom_studies' exists in SQL docs but not in EF model.
+Table 'hms.radiology_reports' exists in SQL docs but not in EF model.
+Table 'hms.radiology_critical_alerts' exists in SQL docs but not in EF model.
+Table 'hms.radiology_dose_logs' exists in SQL docs but not in EF model.
+Table 'hms.radiology_tat_predictions' exists in SQL docs but not in EF model.
+Table 'hms.employees' exists in SQL docs but not in EF model.
+Table 'hms.employee_credentials' exists in SQL docs but not in EF model.
+Table 'hms.duty_rosters' exists in SQL docs but not in EF model.
+Table 'hms.attendance_records' exists in SQL docs but not in EF model.
+Table 'hms.leave_requests' exists in SQL docs but not in EF model.
+Table 'hms.employee_attrition_risk' exists in SQL docs but not in EF model.
+Table 'hms.payroll_runs' exists in SQL docs but not in EF model.
+Table 'hms.payslips' exists in SQL docs but not in EF model.
+Table 'hms.portal_accounts' exists in SQL docs but not in EF model.
+Table 'hms.portal_appointments' exists in SQL docs but not in EF model.
+Table 'hms.portal_teleconsultations' exists in SQL docs but not in EF model.
+Table 'hms.portal_record_access_logs' exists in SQL docs but not in EF model.
+Table 'hms.portal_bill_payments' exists in SQL docs but not in EF model.
+Table 'hms.portal_chatbot_sessions' exists in SQL docs but not in EF model.
+Table 'hms.portal_medication_reminders' exists in SQL docs but not in EF model.
+Table 'hms.portal_feedback' exists in SQL docs but not in EF model.

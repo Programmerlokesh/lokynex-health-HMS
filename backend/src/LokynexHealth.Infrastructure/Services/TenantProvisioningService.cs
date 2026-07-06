@@ -1,15 +1,34 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Infrastructure;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using LokynexHealth.Application.Common.Interfaces;
-using LokynexHealth.Infrastructure.Persistence;
 
 namespace LokynexHealth.Infrastructure.Services;
 
 public class TenantProvisioningService : ITenantProvisioningService
 {
+    private static readonly Regex SafeSchemaName = new("^[a-zA-Z_][a-zA-Z0-9_]*$", RegexOptions.Compiled);
+
+    private static readonly string[] TenantSchemaScripts =
+    [
+        "00_extensions_common.sql",
+        "02_patient_registration.sql",
+        "03_doctor_opd.sql",
+        "04_laboratory.sql",
+        "05_pharmacy_pos.sql",
+        "06_ward_bed_management.sql",
+        "07_icu_monitoring.sql",
+        "08_emergency_er.sql",
+        "09_billing_finance.sql",
+        "10_reports_nabh.sql",
+        "11_ot_management.sql",
+        "12_blood_bank.sql",
+        "13_radiology_pacs.sql",
+        "14_hr_payroll.sql",
+        "15_patient_portal_telemedicine.sql"
+    ];
+
     private readonly string _connectionString;
 
     public TenantProvisioningService(IConfiguration configuration)
@@ -20,46 +39,97 @@ public class TenantProvisioningService : ITenantProvisioningService
 
     public async Task ProvisionTenantSchemaAsync(string schemaName, CancellationToken cancellationToken)
     {
+        if (!SafeSchemaName.IsMatch(schemaName))
+        {
+            throw new ArgumentException($"Invalid tenant schema name '{schemaName}'.", nameof(schemaName));
+        }
+
         await using var connection = new NpgsqlConnection(_connectionString);
         await connection.OpenAsync(cancellationToken);
 
         await using var createSchemaCommand = new NpgsqlCommand(
-            $"CREATE SCHEMA IF NOT EXISTS \"{schemaName}\";", connection);
+            $"CREATE SCHEMA IF NOT EXISTS {QuoteIdentifier(schemaName)};", connection);
         await createSchemaCommand.ExecuteNonQueryAsync(cancellationToken);
 
-        // Generate the CREATE TABLE script directly from the current model
-        // (which is schema-aware via ITenantContext + TenantModelCacheKeyFactory),
-        // then execute it explicitly. This bypasses EnsureCreated's
-        // "does the database exist" check, which is a no-op here since
-        // the physical database (lokynex_health) already exists.
-        var options = new DbContextOptionsBuilder<LokynexHealthDbContext>()
-            .UseNpgsql(_connectionString)
-            .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning))
-            .ReplaceService<IModelCacheKeyFactory, TenantModelCacheKeyFactory>()
-            .Options;
+        if (await TenantAlreadyProvisionedAsync(connection, schemaName, cancellationToken))
+        {
+            return;
+        }
 
-        var fixedTenantContext = new ProvisioningTenantContext(schemaName);
+        foreach (var scriptName in TenantSchemaScripts)
+        {
+            var sql = await ReadEmbeddedSqlAsync(scriptName, cancellationToken);
+            var tenantSql = RewriteSchemaPackSql(sql, schemaName);
 
-        await using var context = new LokynexHealthDbContext(options, fixedTenantContext);
+            await using var command = new NpgsqlCommand(tenantSql, connection)
+            {
+                CommandTimeout = 0
+            };
 
-        var createScript = context.Database.GenerateCreateScript();
-
-        await using var createTablesCommand = new NpgsqlCommand(createScript, connection);
-        await createTablesCommand.ExecuteNonQueryAsync(cancellationToken);
+            await command.ExecuteNonQueryAsync(cancellationToken);
+        }
     }
 
-    private class ProvisioningTenantContext : ITenantContext
+    private static async Task<bool> TenantAlreadyProvisionedAsync(
+        NpgsqlConnection connection,
+        string schemaName,
+        CancellationToken cancellationToken)
     {
-        public string? SchemaName { get; }
-        public Guid? TenantId => null;
+        await using var command = new NpgsqlCommand(
+            """
+            SELECT EXISTS (
+                SELECT 1
+                FROM information_schema.tables
+                WHERE table_schema = @schema_name
+                  AND table_name = 'patients'
+            );
+            """,
+            connection);
 
-        public ProvisioningTenantContext(string schemaName)
+        command.Parameters.AddWithValue("schema_name", schemaName);
+
+        return (bool)(await command.ExecuteScalarAsync(cancellationToken) ?? false);
+    }
+
+    private static async Task<string> ReadEmbeddedSqlAsync(string scriptName, CancellationToken cancellationToken)
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        var resourceName = $"DbSchemaReference.{scriptName}";
+
+        await using var stream = assembly.GetManifestResourceStream(resourceName)
+            ?? throw new InvalidOperationException($"Embedded schema script '{resourceName}' was not found.");
+
+        using var reader = new StreamReader(stream);
+        return await reader.ReadToEndAsync(cancellationToken);
+    }
+
+    private static string RewriteSchemaPackSql(string sql, string schemaName)
+    {
+        var quotedSchema = QuoteIdentifier(schemaName);
+
+        return sql
+            .Replace("CREATE SCHEMA IF NOT EXISTS hms;", $"CREATE SCHEMA IF NOT EXISTS {quotedSchema};")
+            .Replace("SET search_path TO hms, public;", $"SET search_path TO {quotedSchema}, public;")
+            .Replace("hms.", $"{quotedSchema}.")
+            .Replace(
+                "CREATE EXTENSION IF NOT EXISTS vector;",
+                """
+                DO $$
+                BEGIN
+                    CREATE EXTENSION IF NOT EXISTS vector;
+                EXCEPTION WHEN undefined_file THEN
+                    RAISE NOTICE 'pgvector extension is not installed; skipping optional vector extension';
+                END $$;
+                """);
+    }
+
+    private static string QuoteIdentifier(string identifier)
+    {
+        if (!SafeSchemaName.IsMatch(identifier))
         {
-            SchemaName = schemaName;
+            throw new ArgumentException($"Invalid PostgreSQL identifier '{identifier}'.", nameof(identifier));
         }
 
-        public void SetTenant(Guid tenantId, string schemaName)
-        {
-        }
+        return $"\"{identifier.Replace("\"", "\"\"")}\"";
     }
 }

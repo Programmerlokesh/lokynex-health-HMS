@@ -30,7 +30,7 @@ public class CreateInvoiceCommandHandler : IRequestHandler<CreateInvoiceCommand,
         {
             PatientId = request.PatientId,
             InvoiceNumber = invoiceNumber,
-            InvoiceDate = DateTime.UtcNow.Date,
+            InvoiceDate = DateOnly.FromDateTime(DateTime.UtcNow),
             Subtotal = 0,
             DiscountAmount = 0,
             CgstAmount = 0,

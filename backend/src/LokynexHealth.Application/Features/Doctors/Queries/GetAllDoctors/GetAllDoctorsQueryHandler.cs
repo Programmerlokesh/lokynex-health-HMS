@@ -22,11 +22,9 @@ public class GetAllDoctorsQueryHandler : IRequestHandler<GetAllDoctorsQuery, Lis
             {
                 Id = d.Id,
                 FullName = d.FullName,
-                PhoneNumber = d.PhoneNumber,
-                Email = d.Email,
-                Specialization = d.Specialization.ToString(),
-                RegistrationNumber = d.RegistrationNumber,
-                IsAvailable = d.IsAvailable
+                Specialization = d.Specialization ?? string.Empty,
+                RegistrationNumber = d.NmcRegistrationNo,
+                IsAvailable = d.IsActive
             })
             .ToListAsync(cancellationToken);
     }

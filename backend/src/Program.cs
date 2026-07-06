@@ -4,14 +4,34 @@ using LokynexHealth.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
+// If invoked with --verify-schema run the schema verifier and exit
+if (args.Contains("--verify-schema"))
+{
+    return LokynexHealth.SchemaVerifier.SchemaVerifierRunner.Run();
+}
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(CreatePatientCommand).Assembly));
+
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(CreatePatientCommand).Assembly));
+
+
 
 builder.Services.AddScoped<IApplicationDbContext>(provider =>
     provider.GetRequiredService<LokynexHealthDbContext>());

@@ -31,10 +31,10 @@ public class GetPatientByIdQueryHandler : IRequestHandler<GetPatientByIdQuery, P
             FullName = patient.FullName,
             DateOfBirth = patient.DateOfBirth,
             Gender = patient.Gender.ToString(),
-            PhoneNumber = patient.PhoneNumber,
+            Mobile = patient.Mobile,
             Email = patient.Email,
             Address = patient.Address,
-            MedicalRecordNumber = patient.MedicalRecordNumber
+            Uhid = patient.Uhid
         };
     }
 }

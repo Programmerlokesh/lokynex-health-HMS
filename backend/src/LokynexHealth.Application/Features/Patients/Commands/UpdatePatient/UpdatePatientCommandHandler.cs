@@ -22,9 +22,9 @@ public class UpdatePatientCommandHandler : IRequestHandler<UpdatePatientCommand,
         }
 
         patient.FullName = request.FullName;
-        patient.DateOfBirth = request.DateOfBirth;
+        patient.DateOfBirth = DateOnly.FromDateTime(request.DateOfBirth);
         patient.Gender = request.Gender;
-        patient.PhoneNumber = request.PhoneNumber;
+        patient.Mobile = request.PhoneNumber;
         patient.Email = request.Email;
         patient.Address = request.Address;
         patient.UpdatedAt = DateTime.UtcNow;

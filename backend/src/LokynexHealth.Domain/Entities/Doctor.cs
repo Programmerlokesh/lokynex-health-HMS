@@ -5,10 +5,22 @@ namespace LokynexHealth.Domain.Entities;
 
 public class Doctor : BaseEntity
 {
+    public Guid? EmployeeId { get; set; }
     public string FullName { get; set; } = string.Empty;
-    public string PhoneNumber { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public DoctorSpecialization Specialization { get; set; }
-    public string RegistrationNumber { get; set; } = string.Empty;
-    public bool IsAvailable { get; set; } = true;
+    public string NmcRegistrationNo { get; set; } = string.Empty;
+    public string? Specialization { get; set; }
+    public string? AadhaarPkiCertRef { get; set; }
+    public bool IsActive { get; set; } = true;
+
+    public string RegistrationNumber
+    {
+        get => NmcRegistrationNo;
+        set => NmcRegistrationNo = value;
+    }
+
+    public bool IsAvailable
+    {
+        get => IsActive;
+        set => IsActive = value;
+    }
 }

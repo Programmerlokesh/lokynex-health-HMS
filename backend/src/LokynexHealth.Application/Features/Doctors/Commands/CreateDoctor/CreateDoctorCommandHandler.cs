@@ -18,11 +18,9 @@ public class CreateDoctorCommandHandler : IRequestHandler<CreateDoctorCommand, G
         var doctor = new Doctor
         {
             FullName = request.FullName,
-            PhoneNumber = request.PhoneNumber,
-            Email = request.Email,
-            Specialization = request.Specialization,
-            RegistrationNumber = request.RegistrationNumber,
-            IsAvailable = true
+            Specialization = request.Specialization.ToString(),
+            NmcRegistrationNo = request.RegistrationNumber,
+            IsActive = true
         };
 
         _context.Doctors.Add(doctor);
