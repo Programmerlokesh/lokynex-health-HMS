@@ -5,7 +5,6 @@ namespace LokynexHealth.Domain.Entities;
 
 public class Patient : BaseEntity
 {
-    public Guid TenantId { get; set; }
     public string FullName { get; set; } = string.Empty;
     public DateTime DateOfBirth { get; set; }
     public Gender Gender { get; set; }

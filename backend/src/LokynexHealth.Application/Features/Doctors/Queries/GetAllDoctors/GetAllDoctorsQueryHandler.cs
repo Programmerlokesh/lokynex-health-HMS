@@ -18,7 +18,6 @@ public class GetAllDoctorsQueryHandler : IRequestHandler<GetAllDoctorsQuery, Lis
     {
         return await _context.Doctors
             .AsNoTracking()
-            .Where(d => d.TenantId == request.TenantId)
             .Select(d => new DoctorDto
             {
                 Id = d.Id,

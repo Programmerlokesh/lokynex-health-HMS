@@ -18,7 +18,6 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
         _tenantContext = tenantContext;
     }
 
-    public DbSet<Tenant> Tenants => Set<Tenant>();
     public DbSet<Patient> Patients => Set<Patient>();
     public DbSet<Doctor> Doctors => Set<Doctor>();
 
@@ -28,25 +27,12 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
 
         modelBuilder.HasDefaultSchema(SchemaName);
 
-        modelBuilder.Entity<Tenant>(entity =>
-        {
-            entity.Property(t => t.HospitalName).IsRequired().HasMaxLength(200);
-            entity.Property(t => t.Subdomain).IsRequired().HasMaxLength(50);
-            entity.HasIndex(t => t.Subdomain).IsUnique();
-            entity.HasQueryFilter(t => !t.IsDeleted);
-        });
-
         modelBuilder.Entity<Patient>(entity =>
         {
             entity.Property(p => p.FullName).IsRequired().HasMaxLength(200);
             entity.Property(p => p.MedicalRecordNumber).IsRequired().HasMaxLength(50);
             entity.Property(p => p.DateOfBirth).HasColumnType("date");
-            entity.HasIndex(p => new { p.TenantId, p.MedicalRecordNumber }).IsUnique();
-
-            entity.HasOne<Tenant>()
-                .WithMany()
-                .HasForeignKey(p => p.TenantId)
-                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasIndex(p => p.MedicalRecordNumber).IsUnique();
 
             entity.HasQueryFilter(p => !p.IsDeleted);
         });
@@ -55,11 +41,6 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
         {
             entity.Property(d => d.FullName).IsRequired().HasMaxLength(200);
             entity.Property(d => d.RegistrationNumber).IsRequired().HasMaxLength(50);
-
-            entity.HasOne<Tenant>()
-                .WithMany()
-                .HasForeignKey(d => d.TenantId)
-                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasQueryFilter(d => !d.IsDeleted);
         });

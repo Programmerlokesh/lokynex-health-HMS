@@ -5,7 +5,6 @@ namespace LokynexHealth.Application.Features.Patients.Commands.CreatePatient;
 
 public class CreatePatientCommand : IRequest<Guid>
 {
-    public Guid TenantId { get; set; }
     public string FullName { get; set; } = string.Empty;
     public DateTime DateOfBirth { get; set; }
     public Gender Gender { get; set; }

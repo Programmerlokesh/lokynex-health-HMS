@@ -24,9 +24,9 @@ public class DoctorsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllDoctors([FromQuery] Guid tenantId)
+    public async Task<IActionResult> GetAllDoctors()
     {
-        var doctors = await _mediator.Send(new GetAllDoctorsQuery { TenantId = tenantId });
+        var doctors = await _mediator.Send(new GetAllDoctorsQuery());
         return Ok(doctors);
     }
 }

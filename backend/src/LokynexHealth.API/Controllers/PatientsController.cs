@@ -34,9 +34,9 @@ public class PatientsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllPatients([FromQuery] Guid tenantId)
+    public async Task<IActionResult> GetAllPatients()
     {
-        var patients = await _mediator.Send(new GetAllPatientsQuery { TenantId = tenantId });
+        var patients = await _mediator.Send(new GetAllPatientsQuery());
         return Ok(patients);
     }
 

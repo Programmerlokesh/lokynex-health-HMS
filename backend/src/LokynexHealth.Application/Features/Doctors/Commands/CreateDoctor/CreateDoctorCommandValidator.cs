@@ -6,8 +6,6 @@ public class CreateDoctorCommandValidator : AbstractValidator<CreateDoctorComman
 {
     public CreateDoctorCommandValidator()
     {
-        RuleFor(x => x.TenantId).NotEmpty();
-
         RuleFor(x => x.FullName)
             .NotEmpty().WithMessage("Doctor's full name is required.")
             .MaximumLength(200);

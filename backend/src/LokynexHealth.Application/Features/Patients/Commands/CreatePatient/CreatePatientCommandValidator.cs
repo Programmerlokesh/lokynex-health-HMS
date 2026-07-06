@@ -6,9 +6,6 @@ public class CreatePatientCommandValidator : AbstractValidator<CreatePatientComm
 {
     public CreatePatientCommandValidator()
     {
-        RuleFor(x => x.TenantId)
-            .NotEmpty().WithMessage("TenantId is required.");
-
         RuleFor(x => x.FullName)
             .NotEmpty().WithMessage("Full name is required.")
             .MaximumLength(200).WithMessage("Full name must not exceed 200 characters.");
