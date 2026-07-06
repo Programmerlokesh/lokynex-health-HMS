@@ -42,6 +42,13 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
     public DbSet<BillingPayment> BillingPayments => Set<BillingPayment>();
     public DbSet<BillingClaim> BillingClaims => Set<BillingClaim>();
 
+    public DbSet<LabTestCatalog> LabTestCatalog => Set<LabTestCatalog>();
+    public DbSet<LabOrder> LabOrders => Set<LabOrder>();
+    public DbSet<LabOrderTest> LabOrderTests => Set<LabOrderTest>();
+    public DbSet<LabSample> LabSamples => Set<LabSample>();
+    public DbSet<LabResult> LabResults => Set<LabResult>();
+    public DbSet<LabCriticalAlert> LabCriticalAlerts => Set<LabCriticalAlert>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -51,6 +58,7 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
         ConfigurePatients(modelBuilder);
         ConfigureDoctorOpd(modelBuilder);
         ConfigureBilling(modelBuilder);
+        ConfigureLaboratory(modelBuilder);
 
         UseSnakeCaseNames(modelBuilder);
     }
@@ -317,6 +325,82 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
             entity.HasIndex(c => c.InvoiceId);
             entity.HasOne<BillingInvoice>().WithMany().HasForeignKey(c => c.InvoiceId).OnDelete(DeleteBehavior.Cascade);
             entity.HasOne<PatientInsurance>().WithMany().HasForeignKey(c => c.PatientInsuranceId).OnDelete(DeleteBehavior.SetNull);
+        });
+    }
+
+    private static void ConfigureLaboratory(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<LabTestCatalog>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: false, hasUpdatedAt: false);
+            entity.ToTable("lab_test_catalog");
+            entity.Property(t => t.TestCode).IsRequired().HasMaxLength(30);
+            entity.Property(t => t.TestName).IsRequired().HasMaxLength(200);
+            entity.Property(t => t.LoincCode).HasMaxLength(20);
+            entity.Property(t => t.SpecimenType).HasMaxLength(50);
+            entity.Property(t => t.NablPanel).HasMaxLength(100);
+            entity.Property(t => t.StandardPrice).HasColumnType("numeric(10,2)");
+            entity.Property(t => t.CghsPrice).HasColumnType("numeric(10,2)");
+            entity.Property(t => t.TatHoursStd).HasColumnType("numeric(5,2)");
+            entity.HasIndex(t => t.TestCode).IsUnique();
+        });
+
+        modelBuilder.Entity<LabOrder>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: false, hasUpdatedAt: false);
+            entity.ToTable("lab_orders");
+            entity.Property(o => o.OrderNumber).IsRequired().HasMaxLength(30);
+            entity.Property(o => o.Status).HasEnumConversion();
+            entity.Property(o => o.Priority).HasEnumConversion();
+            entity.Property(o => o.SchemeTag).HasMaxLength(20);
+            entity.HasIndex(o => o.OrderNumber).IsUnique();
+            entity.HasIndex(o => o.PatientId);
+            entity.HasIndex(o => o.Status);
+            entity.HasOne<Patient>().WithMany().HasForeignKey(o => o.PatientId).OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne<Doctor>().WithMany().HasForeignKey(o => o.OrderingDoctorId).OnDelete(DeleteBehavior.SetNull);
+            entity.HasOne<AiInteractionLog>().WithMany().HasForeignKey(o => o.AiLogId).OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<LabOrderTest>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: false, hasUpdatedAt: false);
+            entity.ToTable("lab_order_tests");
+            entity.Property(t => t.PriceApplied).HasColumnType("numeric(10,2)");
+            entity.HasOne<LabOrder>().WithMany().HasForeignKey(t => t.OrderId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne<LabTestCatalog>().WithMany().HasForeignKey(t => t.TestId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<LabSample>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: false, hasUpdatedAt: false);
+            entity.ToTable("lab_samples");
+            entity.Property(s => s.SampleBarcode).IsRequired().HasMaxLength(50);
+            entity.HasIndex(s => s.SampleBarcode).IsUnique();
+            entity.HasOne<LabOrder>().WithMany().HasForeignKey(s => s.OrderId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<LabResult>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: true, hasUpdatedAt: false);
+            entity.ToTable("lab_results");
+            entity.Property(r => r.ParameterName).IsRequired().HasMaxLength(150);
+            entity.Property(r => r.ResultValue).HasMaxLength(100);
+            entity.Property(r => r.Unit).HasMaxLength(30);
+            entity.Property(r => r.ReferenceRange).HasMaxLength(100);
+            entity.Property(r => r.Source).HasMaxLength(20);
+            entity.HasIndex(r => r.OrderTestId);
+            entity.HasOne<LabOrderTest>().WithMany().HasForeignKey(r => r.OrderTestId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne<LabSample>().WithMany().HasForeignKey(r => r.SampleId).OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<LabCriticalAlert>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: false, hasUpdatedAt: false);
+            entity.ToTable("lab_critical_alerts");
+            entity.Property(a => a.NotifiedVia).HasMaxLength(20);
+            entity.HasOne<LabResult>().WithMany().HasForeignKey(a => a.ResultId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne<Doctor>().WithMany().HasForeignKey(a => a.NotifiedDoctorId).OnDelete(DeleteBehavior.SetNull);
+            entity.HasOne<AiInteractionLog>().WithMany().HasForeignKey(a => a.AiLogId).OnDelete(DeleteBehavior.SetNull);
         });
     }
 

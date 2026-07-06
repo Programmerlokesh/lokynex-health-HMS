@@ -24,5 +24,11 @@ public interface IApplicationDbContext
     DbSet<BillingRoomCharge> BillingRoomCharges { get; }
     DbSet<BillingPayment> BillingPayments { get; }
     DbSet<BillingClaim> BillingClaims { get; }
+    DbSet<LabTestCatalog> LabTestCatalog { get; }
+    DbSet<LabOrder> LabOrders { get; }
+    DbSet<LabOrderTest> LabOrderTests { get; }
+    DbSet<LabSample> LabSamples { get; }
+    DbSet<LabResult> LabResults { get; }
+    DbSet<LabCriticalAlert> LabCriticalAlerts { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
