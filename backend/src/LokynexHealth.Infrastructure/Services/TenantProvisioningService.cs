@@ -28,10 +28,10 @@ public class TenantProvisioningService : ITenantProvisioningService
 
         await command.ExecuteNonQueryAsync(cancellationToken);
 
-        await MigrateTenantSchemaAsync(schemaName, cancellationToken);
+        await CreateTenantSchemaTablesAsync(schemaName, cancellationToken);
     }
 
-    private async Task MigrateTenantSchemaAsync(string schemaName, CancellationToken cancellationToken)
+    private async Task CreateTenantSchemaTablesAsync(string schemaName, CancellationToken cancellationToken)
     {
         var options = new DbContextOptionsBuilder<LokynexHealthDbContext>()
             .UseNpgsql(_connectionString)
@@ -42,7 +42,12 @@ public class TenantProvisioningService : ITenantProvisioningService
         var fixedTenantContext = new ProvisioningTenantContext(schemaName);
 
         await using var context = new LokynexHealthDbContext(options, fixedTenantContext);
-        await context.Database.MigrateAsync(cancellationToken);
+
+        // EnsureCreated builds DDL directly from the current dynamic model
+        // (respecting HasDefaultSchema at runtime), unlike Migrate() which
+        // replays compiled migration code with a schema name baked in at
+        // generation time.
+        await context.Database.EnsureCreatedAsync(cancellationToken);
     }
 
     private class ProvisioningTenantContext : ITenantContext
