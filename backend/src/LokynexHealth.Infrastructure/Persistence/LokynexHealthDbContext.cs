@@ -59,6 +59,7 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
         ConfigureDoctorOpd(modelBuilder);
         ConfigureBilling(modelBuilder);
         ConfigureLaboratory(modelBuilder);
+        modelBuilder.ConfigureDocsSchemaTables("hms");
 
         UseSnakeCaseNames(modelBuilder);
     }

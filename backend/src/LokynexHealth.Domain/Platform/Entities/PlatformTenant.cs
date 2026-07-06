@@ -15,9 +15,15 @@ public class PlatformTenant
     public string? PinCode { get; set; }
     public string? Phone { get; set; }
     public string? Email { get; set; }
+    public string? Website { get; set; }
+    public int? BedCount { get; set; }
+    public int? DoctorCount { get; set; }
     public string Subdomain { get; set; } = string.Empty;
     public string DbSchemaName { get; set; } = string.Empty;
+    public string RlsTag { get; set; } = string.Empty;
+    public Guid? ParentTenantId { get; set; }
     public TenantPlatformStatus Status { get; set; } = TenantPlatformStatus.Trial;
+    public Guid? CreatedByUserId { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }

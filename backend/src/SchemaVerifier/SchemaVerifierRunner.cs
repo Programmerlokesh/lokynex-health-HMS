@@ -36,30 +36,8 @@ public static class SchemaVerifierRunner
         var repoRoot = repoDir.FullName;
         var docsDir = Path.Combine(repoRoot, "docs", "db-schema-reference");
 
-        // Parse SQL files for CREATE TABLE definitions
-        var tableDefinitions = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
         var sqlFiles = Directory.GetFiles(docsDir, "*.sql");
-        var createTableRegex = new Regex(@"CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(?<table>""?[\w.]+""?)\s*\((?<cols>.*?)\)\s*;", RegexOptions.Singleline | RegexOptions.IgnoreCase);
-        var columnRegex = new Regex(@"(?<name>""?[A-Za-z0-9_]+""?)\s+(?<type>[A-Za-z0-9\(\)_ ,]+)", RegexOptions.IgnoreCase);
-
-        foreach (var file in sqlFiles)
-        {
-            var sql = File.ReadAllText(file);
-            foreach (Match m in createTableRegex.Matches(sql))
-            {
-                var rawTable = m.Groups["table"].Value.Trim();
-                var table = rawTable.Trim('"');
-                var cols = m.Groups["cols"].Value;
-                var columns = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                foreach (Match c in columnRegex.Matches(cols))
-                {
-                    var name = c.Groups["name"].Value.Trim().Trim('"');
-                    var type = c.Groups["type"].Value.Trim();
-                    if (!columns.ContainsKey(name)) columns[name] = type;
-                }
-                if (!tableDefinitions.ContainsKey(table)) tableDefinitions[table] = columns;
-            }
-        }
+        var tableDefinitions = ParseSqlTables(sqlFiles);
 
         Console.WriteLine($"Parsed {tableDefinitions.Count} tables from SQL files.");
 
@@ -95,7 +73,7 @@ public static class SchemaVerifierRunner
 
             foreach (var prop in entityType.GetProperties())
             {
-                var colName = prop.GetColumnName(StoreObjectIdentifier.Table(tableName, null));
+                var colName = prop.GetColumnName(StoreObjectIdentifier.Table(tableName, entityType.GetSchema()));
                 if (string.IsNullOrEmpty(colName)) colName = prop.Name;
                 if (!sqlCols.ContainsKey(colName))
                 {
@@ -123,7 +101,7 @@ public static class SchemaVerifierRunner
         foreach (var m in mismatches) Console.WriteLine(" - " + m);
 
         // Write report
-        var reportPath = Path.Combine(repoRoot, "backend", "tools", "SchemaVerifier", "report.txt");
+        var reportPath = Path.Combine(repoRoot, "backend", "src", "SchemaVerifier", "report.txt");
         File.WriteAllLines(reportPath, mismatches);
         Console.WriteLine($"Report written to {reportPath}");
         return 0;
@@ -142,5 +120,82 @@ public static class SchemaVerifierRunner
             _tenantId = tenantId;
             _schemaName = schemaName;
         }
+    }
+
+    private static Dictionary<string, Dictionary<string, string>> ParseSqlTables(IEnumerable<string> sqlFiles)
+    {
+        var tableDefinitions = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
+        var createTableRegex = new Regex(@"^\s*CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(?<table>""?[\w.]+""?)\s*\(", RegexOptions.IgnoreCase);
+        var columnRegex = new Regex(@"^""?(?<name>[A-Za-z_][A-Za-z0-9_]*)""?\s+(?<type>.+)$", RegexOptions.IgnoreCase);
+        var constraintKeywords = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "CONSTRAINT",
+            "PRIMARY",
+            "FOREIGN",
+            "UNIQUE",
+            "CHECK",
+            "EXCLUDE"
+        };
+
+        foreach (var file in sqlFiles)
+        {
+            string? currentTable = null;
+            Dictionary<string, string>? columns = null;
+
+            foreach (var rawLine in File.ReadLines(file))
+            {
+                var line = StripLineComment(rawLine).Trim();
+                if (line.Length == 0)
+                {
+                    continue;
+                }
+
+                if (currentTable is null)
+                {
+                    var match = createTableRegex.Match(line);
+                    if (!match.Success)
+                    {
+                        continue;
+                    }
+
+                    currentTable = match.Groups["table"].Value.Trim().Trim('"');
+                    columns = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                    continue;
+                }
+
+                if (line.StartsWith(");", StringComparison.Ordinal))
+                {
+                    tableDefinitions[currentTable] = columns!;
+                    currentTable = null;
+                    columns = null;
+                    continue;
+                }
+
+                line = line.TrimEnd(',');
+                var firstToken = line.Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+                if (firstToken is null || constraintKeywords.Contains(firstToken))
+                {
+                    continue;
+                }
+
+                var columnMatch = columnRegex.Match(line);
+                if (!columnMatch.Success)
+                {
+                    continue;
+                }
+
+                var columnName = columnMatch.Groups["name"].Value.Trim().Trim('"');
+                var columnType = columnMatch.Groups["type"].Value.Trim();
+                columns!.TryAdd(columnName, columnType);
+            }
+        }
+
+        return tableDefinitions;
+    }
+
+    private static string StripLineComment(string line)
+    {
+        var commentStart = line.IndexOf("--", StringComparison.Ordinal);
+        return commentStart >= 0 ? line[..commentStart] : line;
     }
 }
