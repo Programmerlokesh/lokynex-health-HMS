@@ -8,6 +8,8 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
 {
     private readonly ITenantContext _tenantContext;
 
+    public string SchemaName => _tenantContext.SchemaName ?? "hms_default";
+
     public LokynexHealthDbContext(
         DbContextOptions<LokynexHealthDbContext> options,
         ITenantContext tenantContext)
@@ -24,8 +26,7 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        var schema = _tenantContext.SchemaName ?? "hms_default";
-        modelBuilder.HasDefaultSchema(schema);
+        modelBuilder.HasDefaultSchema(SchemaName);
 
         modelBuilder.Entity<Tenant>(entity =>
         {

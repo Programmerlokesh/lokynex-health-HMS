@@ -9,6 +9,7 @@ using LokynexHealth.Infrastructure.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +32,8 @@ builder.Services.AddScoped<IApplicationDbContext>(provider =>
 
 builder.Services.AddDbContext<LokynexHealthDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
-           .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning)));
+           .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning))
+           .ReplaceService<IModelCacheKeyFactory, TenantModelCacheKeyFactory>());
 
 builder.Services.AddScoped<IPlatformDbContext>(provider =>
     provider.GetRequiredService<PlatformDbContext>());

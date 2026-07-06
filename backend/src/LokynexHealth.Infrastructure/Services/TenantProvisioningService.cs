@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using LokynexHealth.Application.Common.Interfaces;
@@ -35,6 +36,7 @@ public class TenantProvisioningService : ITenantProvisioningService
         var options = new DbContextOptionsBuilder<LokynexHealthDbContext>()
             .UseNpgsql(_connectionString)
             .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning))
+            .ReplaceService<IModelCacheKeyFactory, TenantModelCacheKeyFactory>()
             .Options;
 
         var fixedTenantContext = new ProvisioningTenantContext(schemaName);
