@@ -34,11 +34,5 @@ public interface IApplicationDbContext
     DbSet<PharmacyStockBatch> PharmacyStockBatches { get; }
     DbSet<PharmacySale> PharmacySales { get; }
     DbSet<PharmacySaleItem> PharmacySaleItems { get; }
-    DbSet<Ward> Wards { get; }
-    DbSet<Bed> Beds { get; }
-    DbSet<Admission> Admissions { get; }
-    DbSet<NursingAssessment> NursingAssessments { get; }
-    DbSet<BedTransfer> BedTransfers { get; }
-    DbSet<HousekeepingTask> HousekeepingTasks { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
