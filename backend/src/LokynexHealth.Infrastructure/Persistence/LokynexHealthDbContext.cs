@@ -41,7 +41,6 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
     public DbSet<BillingRoomCharge> BillingRoomCharges => Set<BillingRoomCharge>();
     public DbSet<BillingPayment> BillingPayments => Set<BillingPayment>();
     public DbSet<BillingClaim> BillingClaims => Set<BillingClaim>();
-
     public DbSet<LabTestCatalog> LabTestCatalog => Set<LabTestCatalog>();
     public DbSet<LabOrder> LabOrders => Set<LabOrder>();
     public DbSet<LabOrderTest> LabOrderTests => Set<LabOrderTest>();
@@ -52,6 +51,18 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
     public DbSet<PharmacyStockBatch> PharmacyStockBatches => Set<PharmacyStockBatch>();
     public DbSet<PharmacySale> PharmacySales => Set<PharmacySale>();
     public DbSet<PharmacySaleItem> PharmacySaleItems => Set<PharmacySaleItem>();
+
+    public DbSet<Ward> Wards => Set<Ward>();
+
+    public DbSet<Bed> Beds => Set<Bed>();
+
+    public DbSet<Admission> Admissions => Set<Admission>();
+
+    public DbSet<NursingAssessment> NursingAssessments => Set<NursingAssessment>();
+
+    public DbSet<BedTransfer> BedTransfers => Set<BedTransfer>();
+
+    public DbSet<HousekeepingTask> HousekeepingTasks => Set<HousekeepingTask>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -64,6 +75,7 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
         ConfigureBilling(modelBuilder);
         ConfigureLaboratory(modelBuilder);
         ConfigurePharmacy(modelBuilder);
+        ConfigureWardBed(modelBuilder);
         modelBuilder.ConfigureDocsSchemaTables("hms");
 
         UseSnakeCaseNames(modelBuilder);
@@ -470,6 +482,76 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
             entity.HasOne<PharmacySale>().WithMany().HasForeignKey(i => i.SaleId).OnDelete(DeleteBehavior.Cascade);
             entity.HasOne<PharmacyDrugCatalog>().WithMany().HasForeignKey(i => i.DrugId).OnDelete(DeleteBehavior.Restrict);
             entity.HasOne<PharmacyStockBatch>().WithMany().HasForeignKey(i => i.BatchId).OnDelete(DeleteBehavior.Restrict);
+        });
+    }
+
+    private static void ConfigureWardBed(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Ward>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: false, hasUpdatedAt: false);
+            entity.ToTable("wards");
+            entity.Property(w => w.WardName).IsRequired().HasMaxLength(100);
+            entity.Property(w => w.WardType).HasMaxLength(50);
+            entity.Property(w => w.Floor).HasMaxLength(20);
+        });
+
+        modelBuilder.Entity<Bed>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: false, hasUpdatedAt: false);
+            entity.ToTable("beds");
+            entity.Property(b => b.BedNumber).IsRequired().HasMaxLength(20);
+            entity.Property(b => b.BedCategory).HasMaxLength(30);
+            entity.Property(b => b.Status).HasEnumConversion();
+            entity.Property(b => b.DailyRate).HasColumnType("numeric(10,2)");
+            entity.HasIndex(b => new { b.WardId, b.BedNumber }).IsUnique();
+            entity.HasIndex(b => b.Status);
+            entity.HasOne<Ward>().WithMany().HasForeignKey(b => b.WardId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Admission>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: false, hasUpdatedAt: false);
+            entity.ToTable("admissions");
+            entity.Property(a => a.AdmissionNumber).IsRequired().HasMaxLength(30);
+            entity.Property(a => a.PmjayPackageCode).HasMaxLength(30);
+            entity.Property(a => a.Status).HasEnumConversion();
+            entity.HasIndex(a => a.AdmissionNumber).IsUnique();
+            entity.HasIndex(a => a.PatientId);
+            entity.HasIndex(a => a.BedId);
+            entity.HasOne<Patient>().WithMany().HasForeignKey(a => a.PatientId).OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne<Doctor>().WithMany().HasForeignKey(a => a.AdmittingDoctorId).OnDelete(DeleteBehavior.SetNull);
+            entity.HasOne<Bed>().WithMany().HasForeignKey(a => a.BedId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<NursingAssessment>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: false, hasUpdatedAt: false);
+            entity.ToTable("nursing_assessments");
+            entity.Property(n => n.VitalsJson).HasColumnName("vitals_json").HasColumnType("jsonb");
+            entity.Property(n => n.AiLosPredictionDays).HasColumnType("numeric(5,1)");
+            entity.Property(n => n.AiReadmissionRisk).HasColumnType("numeric(5,4)");
+            entity.HasIndex(n => n.AdmissionId);
+            entity.HasOne<Admission>().WithMany().HasForeignKey(n => n.AdmissionId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne<AiInteractionLog>().WithMany().HasForeignKey(n => n.AiLogId).OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<BedTransfer>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: false, hasUpdatedAt: false);
+            entity.ToTable("bed_transfers");
+            entity.HasOne<Admission>().WithMany().HasForeignKey(t => t.AdmissionId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne<Bed>().WithMany().HasForeignKey(t => t.FromBedId).OnDelete(DeleteBehavior.SetNull);
+            entity.HasOne<Bed>().WithMany().HasForeignKey(t => t.ToBedId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<HousekeepingTask>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: true, hasUpdatedAt: false);
+            entity.ToTable("housekeeping_tasks");
+            entity.Property(h => h.TaskType).HasMaxLength(30);
+            entity.Property(h => h.Status).IsRequired().HasMaxLength(20);
+            entity.HasOne<Bed>().WithMany().HasForeignKey(h => h.BedId).OnDelete(DeleteBehavior.Restrict);
         });
     }
     private static void ConfigureBase<TEntity>(
