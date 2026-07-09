@@ -40,5 +40,9 @@ public interface IApplicationDbContext
     DbSet<NursingAssessment> NursingAssessments { get; }
     DbSet<BedTransfer> BedTransfers { get; }
     DbSet<HousekeepingTask> HousekeepingTasks { get; }
+    DbSet<IcuAdmission> IcuAdmissions { get; }
+    DbSet<IcuVital> IcuVitals { get; }
+    DbSet<IcuVentilatorRecord> IcuVentilatorRecords { get; }
+    DbSet<IcuIoChart> IcuIoCharts { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

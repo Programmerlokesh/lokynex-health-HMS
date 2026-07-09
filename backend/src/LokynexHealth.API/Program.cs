@@ -15,7 +15,25 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.OperationFilter<LokynexHealth.API.Swagger.TenantHeaderOperationFilter>();
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        var allowedOrigins = builder.Configuration
+            .GetSection("Cors:AllowedOrigins")
+            .Get<string[]>() ?? new[] { "http://localhost:3000" };
+
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
 
 builder.Services.AddMediatR(cfg =>
 {
@@ -49,6 +67,7 @@ var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<TenantResolutionMiddleware>();
+app.UseCors("Frontend");
 
 if (app.Environment.IsDevelopment())
 {

@@ -64,6 +64,7 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
 
     public DbSet<HousekeepingTask> HousekeepingTasks => Set<HousekeepingTask>();
 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -76,6 +77,7 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
         ConfigureLaboratory(modelBuilder);
         ConfigurePharmacy(modelBuilder);
         ConfigureWardBed(modelBuilder);
+        ConfigureIcu(modelBuilder);
         modelBuilder.ConfigureDocsSchemaTables("hms");
 
         UseSnakeCaseNames(modelBuilder);
@@ -554,6 +556,51 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
             entity.HasOne<Bed>().WithMany().HasForeignKey(h => h.BedId).OnDelete(DeleteBehavior.Restrict);
         });
     }
+
+    private static void ConfigureIcu(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<IcuAdmission>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: false, hasUpdatedAt: false);
+            entity.ToTable("icu_admissions");
+            entity.Property(i => i.IcuUnitType).HasEnumConversion();
+            entity.Property(i => i.Status).HasEnumConversion();
+            entity.HasIndex(i => i.AdmissionId);
+            entity.HasOne<Admission>().WithMany().HasForeignKey(i => i.AdmissionId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<IcuVital>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: false, hasUpdatedAt: false);
+            entity.ToTable("icu_vitals");
+            entity.Property(v => v.TemperatureC).HasColumnType("numeric(4,1)");
+            entity.Property(v => v.UrineOutputMlPerKgHr).HasColumnType("numeric(5,2)");
+            entity.Property(v => v.BreachParameters).HasColumnType("text[]");
+            entity.HasIndex(v => new { v.IcuAdmissionId, v.RecordedAt });
+            entity.HasOne<IcuAdmission>().WithMany().HasForeignKey(v => v.IcuAdmissionId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<IcuVentilatorRecord>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: false, hasUpdatedAt: false);
+            entity.ToTable("icu_ventilator_records");
+            entity.Property(r => r.Mode).HasMaxLength(30);
+            entity.Property(r => r.PeepCmh2o).HasColumnType("numeric(4,1)");
+            entity.HasOne<IcuAdmission>().WithMany().HasForeignKey(r => r.IcuAdmissionId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<IcuIoChart>(entity =>
+        {
+            ConfigureBase(entity, hasCreatedAt: false, hasUpdatedAt: false);
+            entity.ToTable("icu_io_charts");
+            entity.Property(c => c.ChartDate).HasColumnType("date");
+            entity.Property(c => c.IntakeMl).HasColumnType("numeric(8,2)");
+            entity.Property(c => c.OutputMl).HasColumnType("numeric(8,2)");
+            entity.HasIndex(c => new { c.IcuAdmissionId, c.ChartDate }).IsUnique();
+            entity.HasOne<IcuAdmission>().WithMany().HasForeignKey(c => c.IcuAdmissionId).OnDelete(DeleteBehavior.Cascade);
+        });
+    }
+
     private static void ConfigureBase<TEntity>(
         EntityTypeBuilder<TEntity> entity,
         bool hasCreatedAt,

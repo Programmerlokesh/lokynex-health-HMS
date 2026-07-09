@@ -1,0 +1,19 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  LokynexHealth.Shared -> C:\CTO_Lokynex\lokynex-health-HMS\backend\src\LokynexHealth.Shared\bin\Debug\net10.0\LokynexHealth.Shared.dll
+  LokynexHealth.Domain -> C:\CTO_Lokynex\lokynex-health-HMS\backend\src\LokynexHealth.Domain\bin\Debug\net10.0\LokynexHealth.Domain.dll
+C:\CTO_Lokynex\lokynex-health-HMS\backend\src\LokynexHealth.Application\Common\Interfaces\IApplicationDbContext.cs(46,11): error CS0246: The type or namespace name 'IcuIoChart' could not be found (are you missing a using directive or an assembly reference?) [C:\CTO_Lokynex\lokynex-health-HMS\backend\src\LokynexHealth.Application\LokynexHealth.Application.csproj]
+C:\CTO_Lokynex\lokynex-health-HMS\backend\src\LokynexHealth.Application\Features\Icu\Queries\GetIoChartsByIcuAdmission\GetIoChartsByIcuAdmissionQuery.cs(6,61): error CS0246: The type or namespace name 'IcuIoChartDto' could not be found (are you missing a using directive or an assembly reference?) [C:\CTO_Lokynex\lokynex-health-HMS\backend\src\LokynexHealth.Application\LokynexHealth.Application.csproj]
+C:\CTO_Lokynex\lokynex-health-HMS\backend\src\LokynexHealth.Application\Features\Icu\Queries\GetIoChartsByIcuAdmission\GetIoChartsByIcuAdmissionQueryHandler.cs(8,107): error CS0246: The type or namespace name 'IcuIoChartDto' could not be found (are you missing a using directive or an assembly reference?) [C:\CTO_Lokynex\lokynex-health-HMS\backend\src\LokynexHealth.Application\LokynexHealth.Application.csproj]
+C:\CTO_Lokynex\lokynex-health-HMS\backend\src\LokynexHealth.Application\Features\Icu\Queries\GetIoChartsByIcuAdmission\GetIoChartsByIcuAdmissionQueryHandler.cs(17,28): error CS0246: The type or namespace name 'IcuIoChartDto' could not be found (are you missing a using directive or an assembly reference?) [C:\CTO_Lokynex\lokynex-health-HMS\backend\src\LokynexHealth.Application\LokynexHealth.Application.csproj]
+
+Build FAILED.
+
+C:\CTO_Lokynex\lokynex-health-HMS\backend\src\LokynexHealth.Application\Common\Interfaces\IApplicationDbContext.cs(46,11): error CS0246: The type or namespace name 'IcuIoChart' could not be found (are you missing a using directive or an assembly reference?) [C:\CTO_Lokynex\lokynex-health-HMS\backend\src\LokynexHealth.Application\LokynexHealth.Application.csproj]
+C:\CTO_Lokynex\lokynex-health-HMS\backend\src\LokynexHealth.Application\Features\Icu\Queries\GetIoChartsByIcuAdmission\GetIoChartsByIcuAdmissionQuery.cs(6,61): error CS0246: The type or namespace name 'IcuIoChartDto' could not be found (are you missing a using directive or an assembly reference?) [C:\CTO_Lokynex\lokynex-health-HMS\backend\src\LokynexHealth.Application\LokynexHealth.Application.csproj]
+C:\CTO_Lokynex\lokynex-health-HMS\backend\src\LokynexHealth.Application\Features\Icu\Queries\GetIoChartsByIcuAdmission\GetIoChartsByIcuAdmissionQueryHandler.cs(8,107): error CS0246: The type or namespace name 'IcuIoChartDto' could not be found (are you missing a using directive or an assembly reference?) [C:\CTO_Lokynex\lokynex-health-HMS\backend\src\LokynexHealth.Application\LokynexHealth.Application.csproj]
+C:\CTO_Lokynex\lokynex-health-HMS\backend\src\LokynexHealth.Application\Features\Icu\Queries\GetIoChartsByIcuAdmission\GetIoChartsByIcuAdmissionQueryHandler.cs(17,28): error CS0246: The type or namespace name 'IcuIoChartDto' could not be found (are you missing a using directive or an assembly reference?) [C:\CTO_Lokynex\lokynex-health-HMS\backend\src\LokynexHealth.Application\LokynexHealth.Application.csproj]
+    0 Warning(s)
+    4 Error(s)
+
+Time Elapsed 00:00:10.81
