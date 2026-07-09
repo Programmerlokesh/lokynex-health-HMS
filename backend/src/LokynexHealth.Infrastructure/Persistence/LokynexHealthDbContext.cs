@@ -64,6 +64,11 @@ public class LokynexHealthDbContext : DbContext, IApplicationDbContext
 
     public DbSet<HousekeepingTask> HousekeepingTasks => Set<HousekeepingTask>();
 
+    public DbSet<IcuAdmission> IcuAdmissions => Set<IcuAdmission>();
+    public DbSet<IcuVital> IcuVitals => Set<IcuVital>();
+    public DbSet<IcuVentilatorRecord> IcuVentilatorRecords => Set<IcuVentilatorRecord>();
+    public DbSet<IcuIoChart> IcuIoCharts => Set<IcuIoChart>();
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
