@@ -1,11 +1,10 @@
-using LokynexHealth.Domain.Common;
+using MediatR;
 
-namespace LokynexHealth.Domain.Entities;
+namespace LokynexHealth.Application.Features.IcuMonitoring.Commands.RecordVitals;
 
-public class IcuVital : BaseEntity
+public class RecordVitalsCommand : IRequest<Guid>
 {
     public Guid IcuAdmissionId { get; set; }
-    public DateTimeOffset RecordedAt { get; set; } = DateTimeOffset.UtcNow;
     public short? HeartRate { get; set; }
     public short? SystolicBp { get; set; }
     public short? DiastolicBp { get; set; }
@@ -14,6 +13,4 @@ public class IcuVital : BaseEntity
     public decimal? TemperatureC { get; set; }
     public decimal? UrineOutputMlPerKgHr { get; set; }
     public short? RespiratoryRate { get; set; }
-    public bool IsThresholdBreach { get; set; }
-    public List<string> BreachParameters { get; set; } = new();
 }

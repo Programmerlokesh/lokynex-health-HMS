@@ -1,13 +1,12 @@
-using LokynexHealth.Domain.Common;
+using MediatR;
 
-namespace LokynexHealth.Domain.Entities;
+namespace LokynexHealth.Application.Features.IcuMonitoring.Commands.RecordVentilatorReading;
 
-public class IcuVentilatorRecord : BaseEntity
+public class RecordVentilatorReadingCommand : IRequest<Guid>
 {
     public Guid IcuAdmissionId { get; set; }
     public string? Mode { get; set; }
     public short? Fio2Pct { get; set; }
     public decimal? PeepCmH2O { get; set; }
     public short? TidalVolumeMl { get; set; }
-    public DateTimeOffset RecordedAt { get; set; } = DateTimeOffset.UtcNow;
 }

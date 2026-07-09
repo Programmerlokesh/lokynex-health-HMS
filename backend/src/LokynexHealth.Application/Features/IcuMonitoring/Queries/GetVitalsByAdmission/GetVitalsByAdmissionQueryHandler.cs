@@ -1,35 +1,33 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using LokynexHealth.Application.Common.Interfaces;
-using LokynexHealth.Application.Features.Icu.DTOs;
+using LokynexHealth.Application.Features.IcuMonitoring.DTOs;
 
-namespace LokynexHealth.Application.Features.Icu.Queries.GetVitalsByIcuAdmission;
+namespace LokynexHealth.Application.Features.IcuMonitoring.Queries.GetVitalsByAdmission;
 
-public class GetVitalsByIcuAdmissionQueryHandler : IRequestHandler<GetVitalsByIcuAdmissionQuery, List<IcuVitalDto>>
+public class GetVitalsByAdmissionQueryHandler : IRequestHandler<GetVitalsByAdmissionQuery, List<IcuVitalDto>>
 {
     private readonly IApplicationDbContext _context;
 
-    public GetVitalsByIcuAdmissionQueryHandler(IApplicationDbContext context)
+    public GetVitalsByAdmissionQueryHandler(IApplicationDbContext context)
     {
         _context = context;
     }
 
-    public async Task<List<IcuVitalDto>> Handle(GetVitalsByIcuAdmissionQuery request, CancellationToken cancellationToken)
+    public async Task<List<IcuVitalDto>> Handle(GetVitalsByAdmissionQuery request, CancellationToken cancellationToken)
     {
-        return await _context.IcuVitals
-            .AsNoTracking()
+        return await _context.IcuVitals.AsNoTracking()
             .Where(v => v.IcuAdmissionId == request.IcuAdmissionId)
             .OrderByDescending(v => v.RecordedAt)
             .Select(v => new IcuVitalDto
             {
                 Id = v.Id,
-                IcuAdmissionId = v.IcuAdmissionId,
                 RecordedAt = v.RecordedAt,
                 HeartRate = v.HeartRate,
                 SystolicBp = v.SystolicBp,
                 DiastolicBp = v.DiastolicBp,
-                MapMmhg = v.MapMmHg,
-                Spo2Pct = v.SpO2Pct,
+                MapMmHg = v.MapMmHg,
+                SpO2Pct = v.SpO2Pct,
                 TemperatureC = v.TemperatureC,
                 UrineOutputMlPerKgHr = v.UrineOutputMlPerKgHr,
                 RespiratoryRate = v.RespiratoryRate,

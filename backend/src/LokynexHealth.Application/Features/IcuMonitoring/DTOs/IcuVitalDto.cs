@@ -1,11 +1,9 @@
-using LokynexHealth.Domain.Common;
+namespace LokynexHealth.Application.Features.IcuMonitoring.DTOs;
 
-namespace LokynexHealth.Domain.Entities;
-
-public class IcuVital : BaseEntity
+public class IcuVitalDto
 {
-    public Guid IcuAdmissionId { get; set; }
-    public DateTimeOffset RecordedAt { get; set; } = DateTimeOffset.UtcNow;
+    public Guid Id { get; set; }
+    public DateTimeOffset RecordedAt { get; set; }
     public short? HeartRate { get; set; }
     public short? SystolicBp { get; set; }
     public short? DiastolicBp { get; set; }

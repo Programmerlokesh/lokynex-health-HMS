@@ -1,14 +1,13 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using LokynexHealth.Application.Features.Icu.Commands.AdmitToIcu;
-using LokynexHealth.Application.Features.Icu.Commands.RecordVitals;
-using LokynexHealth.Application.Features.Icu.Commands.RecordVentilatorSettings;
-using LokynexHealth.Application.Features.Icu.Commands.RecordIoChart;
-using LokynexHealth.Application.Features.Icu.Commands.DischargeFromIcu;
-using LokynexHealth.Application.Features.Icu.Queries.GetIcuAdmissionById;
-using LokynexHealth.Application.Features.Icu.Queries.GetActiveIcuAdmissions;
-using LokynexHealth.Application.Features.Icu.Queries.GetVitalsByIcuAdmission;
-using LokynexHealth.Application.Features.Icu.Queries.GetIoChartsByIcuAdmission;
+using LokynexHealth.Application.Features.IcuMonitoring.Commands.CreateIcuAdmission;
+using LokynexHealth.Application.Features.IcuMonitoring.Commands.RecordVitals;
+using LokynexHealth.Application.Features.IcuMonitoring.Commands.RecordVentilatorReading;
+using LokynexHealth.Application.Features.IcuMonitoring.Commands.RecordIoChart;
+using LokynexHealth.Application.Features.IcuMonitoring.Commands.DischargeIcuAdmission;
+using LokynexHealth.Application.Features.IcuMonitoring.Queries.GetIcuAdmissionById;
+using LokynexHealth.Application.Features.IcuMonitoring.Queries.GetActiveIcuAdmissions;
+using LokynexHealth.Application.Features.IcuMonitoring.Queries.GetVitalsByAdmission;
 
 namespace LokynexHealth.API.Controllers;
 
@@ -24,7 +23,7 @@ public class IcuController : ControllerBase
     }
 
     [HttpPost("admissions")]
-    public async Task<IActionResult> AdmitToIcu([FromBody] AdmitToIcuCommand command)
+    public async Task<IActionResult> CreateIcuAdmission([FromBody] CreateIcuAdmissionCommand command)
     {
         var id = await _mediator.Send(command);
         return CreatedAtAction(nameof(GetIcuAdmissionById), new { id }, new { id });
@@ -44,30 +43,23 @@ public class IcuController : ControllerBase
         return Ok(admissions);
     }
 
-    [HttpPost("admissions/{id:guid}/discharge")]
-    public async Task<IActionResult> DischargeFromIcu(Guid id)
-    {
-        var result = await _mediator.Send(new DischargeFromIcuCommand { IcuAdmissionId = id });
-        return Ok(new { id = result });
-    }
-
     [HttpPost("admissions/{id:guid}/vitals")]
     public async Task<IActionResult> RecordVitals(Guid id, [FromBody] RecordVitalsCommand command)
     {
         command.IcuAdmissionId = id;
-        var vital = await _mediator.Send(command);
-        return CreatedAtAction(nameof(GetVitalsByIcuAdmission), new { id }, vital);
+        var vitalId = await _mediator.Send(command);
+        return CreatedAtAction(nameof(GetVitalsByAdmission), new { id }, new { id = vitalId });
     }
 
     [HttpGet("admissions/{id:guid}/vitals")]
-    public async Task<IActionResult> GetVitalsByIcuAdmission(Guid id)
+    public async Task<IActionResult> GetVitalsByAdmission(Guid id)
     {
-        var vitals = await _mediator.Send(new GetVitalsByIcuAdmissionQuery { IcuAdmissionId = id });
+        var vitals = await _mediator.Send(new GetVitalsByAdmissionQuery { IcuAdmissionId = id });
         return Ok(vitals);
     }
 
     [HttpPost("admissions/{id:guid}/ventilator")]
-    public async Task<IActionResult> RecordVentilatorSettings(Guid id, [FromBody] RecordVentilatorSettingsCommand command)
+    public async Task<IActionResult> RecordVentilatorReading(Guid id, [FromBody] RecordVentilatorReadingCommand command)
     {
         command.IcuAdmissionId = id;
         var recordId = await _mediator.Send(command);
@@ -79,13 +71,13 @@ public class IcuController : ControllerBase
     {
         command.IcuAdmissionId = id;
         var chartId = await _mediator.Send(command);
-        return CreatedAtAction(nameof(GetIoChartsByIcuAdmission), new { id }, new { id = chartId });
+        return Ok(new { id = chartId });
     }
 
-    [HttpGet("admissions/{id:guid}/io-chart")]
-    public async Task<IActionResult> GetIoChartsByIcuAdmission(Guid id)
+    [HttpPost("admissions/{id:guid}/discharge")]
+    public async Task<IActionResult> DischargeIcuAdmission(Guid id)
     {
-        var charts = await _mediator.Send(new GetIoChartsByIcuAdmissionQuery { IcuAdmissionId = id });
-        return Ok(charts);
+        await _mediator.Send(new DischargeIcuAdmissionCommand { IcuAdmissionId = id });
+        return NoContent();
     }
 }
