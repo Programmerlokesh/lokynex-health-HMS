@@ -7,10 +7,8 @@ namespace LokynexHealth.API.Controllers.Modules;
 [Route("api/pharmacy")]
 public class PharmacyController : ModuleDataControllerBase
 {
-    public PharmacyController(
-        IModuleSchemaService moduleSchemaService,
-        IGenericTenantDataService dataService)
-        : base(moduleSchemaService, dataService)
+    public PharmacyController(IGenericTenantDataService dataService)
+        : base(dataService)
     {
     }
 

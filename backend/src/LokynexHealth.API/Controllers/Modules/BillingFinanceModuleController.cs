@@ -7,10 +7,8 @@ namespace LokynexHealth.API.Controllers.Modules;
 [Route("api/billing-finance")]
 public class BillingFinanceModuleController : ModuleDataControllerBase
 {
-    public BillingFinanceModuleController(
-        IModuleSchemaService moduleSchemaService,
-        IGenericTenantDataService dataService)
-        : base(moduleSchemaService, dataService)
+    public BillingFinanceModuleController(IGenericTenantDataService dataService)
+        : base(dataService)
     {
     }
 

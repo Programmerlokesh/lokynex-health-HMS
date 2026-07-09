@@ -7,10 +7,8 @@ namespace LokynexHealth.API.Controllers.Modules;
 [Route("api/ot-management")]
 public class OtManagementController : ModuleDataControllerBase
 {
-    public OtManagementController(
-        IModuleSchemaService moduleSchemaService,
-        IGenericTenantDataService dataService)
-        : base(moduleSchemaService, dataService)
+    public OtManagementController(IGenericTenantDataService dataService)
+        : base(dataService)
     {
     }
 

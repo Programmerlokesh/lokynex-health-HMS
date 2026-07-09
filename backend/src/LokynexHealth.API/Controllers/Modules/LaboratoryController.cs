@@ -7,10 +7,8 @@ namespace LokynexHealth.API.Controllers.Modules;
 [Route("api/laboratory")]
 public class LaboratoryController : ModuleDataControllerBase
 {
-    public LaboratoryController(
-        IModuleSchemaService moduleSchemaService,
-        IGenericTenantDataService dataService)
-        : base(moduleSchemaService, dataService)
+    public LaboratoryController(IGenericTenantDataService dataService)
+        : base(dataService)
     {
     }
 

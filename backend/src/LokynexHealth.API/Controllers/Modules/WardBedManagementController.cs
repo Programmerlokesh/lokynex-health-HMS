@@ -7,10 +7,8 @@ namespace LokynexHealth.API.Controllers.Modules;
 [Route("api/ward-bed-management")]
 public class WardBedManagementController : ModuleDataControllerBase
 {
-    public WardBedManagementController(
-        IModuleSchemaService moduleSchemaService,
-        IGenericTenantDataService dataService)
-        : base(moduleSchemaService, dataService)
+    public WardBedManagementController(IGenericTenantDataService dataService)
+        : base(dataService)
     {
     }
 

@@ -7,10 +7,8 @@ namespace LokynexHealth.API.Controllers.Modules;
 [Route("api/reports-nabh")]
 public class ReportsNabhController : ModuleDataControllerBase
 {
-    public ReportsNabhController(
-        IModuleSchemaService moduleSchemaService,
-        IGenericTenantDataService dataService)
-        : base(moduleSchemaService, dataService)
+    public ReportsNabhController(IGenericTenantDataService dataService)
+        : base(dataService)
     {
     }
 

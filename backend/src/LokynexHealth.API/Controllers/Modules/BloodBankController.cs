@@ -7,10 +7,8 @@ namespace LokynexHealth.API.Controllers.Modules;
 [Route("api/blood-bank")]
 public class BloodBankController : ModuleDataControllerBase
 {
-    public BloodBankController(
-        IModuleSchemaService moduleSchemaService,
-        IGenericTenantDataService dataService)
-        : base(moduleSchemaService, dataService)
+    public BloodBankController(IGenericTenantDataService dataService)
+        : base(dataService)
     {
     }
 

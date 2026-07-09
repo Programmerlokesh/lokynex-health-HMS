@@ -7,10 +7,8 @@ namespace LokynexHealth.API.Controllers.Modules;
 [Route("api/patient-registration")]
 public class PatientRegistrationController : ModuleDataControllerBase
 {
-    public PatientRegistrationController(
-        IModuleSchemaService moduleSchemaService,
-        IGenericTenantDataService dataService)
-        : base(moduleSchemaService, dataService)
+    public PatientRegistrationController(IGenericTenantDataService dataService)
+        : base(dataService)
     {
     }
 

@@ -7,10 +7,8 @@ namespace LokynexHealth.API.Controllers.Modules;
 [Route("api/hr-payroll")]
 public class HrPayrollController : ModuleDataControllerBase
 {
-    public HrPayrollController(
-        IModuleSchemaService moduleSchemaService,
-        IGenericTenantDataService dataService)
-        : base(moduleSchemaService, dataService)
+    public HrPayrollController(IGenericTenantDataService dataService)
+        : base(dataService)
     {
     }
 

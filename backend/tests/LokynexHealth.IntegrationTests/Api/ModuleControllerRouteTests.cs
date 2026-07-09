@@ -30,9 +30,14 @@ public class ModuleControllerRouteTests
         Assert.Equal(expectedRoute, route.Template);
     }
 
+    [Fact]
+    public void ModuleDataControllerBase_DoesNotExposeSchemaMetadataEndpoints()
+    {
+        Assert.Null(typeof(ModuleDataControllerBase).GetMethod("GetModuleSchema", Array.Empty<Type>()));
+        Assert.Null(typeof(ModuleDataControllerBase).GetMethod("GetTables", Array.Empty<Type>()));
+    }
+
     [Theory]
-    [InlineData(nameof(ModuleDataControllerBase.GetModuleSchema), typeof(HttpGetAttribute), "schema")]
-    [InlineData(nameof(ModuleDataControllerBase.GetTables), typeof(HttpGetAttribute), "tables")]
     [InlineData(nameof(ModuleDataControllerBase.ListRows), typeof(HttpGetAttribute), "{tableName}")]
     [InlineData(nameof(ModuleDataControllerBase.GetById), typeof(HttpGetAttribute), "{tableName}/{id:guid}")]
     [InlineData(nameof(ModuleDataControllerBase.Create), typeof(HttpPostAttribute), "{tableName}")]

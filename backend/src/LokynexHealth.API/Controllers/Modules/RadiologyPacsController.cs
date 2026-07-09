@@ -7,10 +7,8 @@ namespace LokynexHealth.API.Controllers.Modules;
 [Route("api/radiology-pacs")]
 public class RadiologyPacsController : ModuleDataControllerBase
 {
-    public RadiologyPacsController(
-        IModuleSchemaService moduleSchemaService,
-        IGenericTenantDataService dataService)
-        : base(moduleSchemaService, dataService)
+    public RadiologyPacsController(IGenericTenantDataService dataService)
+        : base(dataService)
     {
     }
 

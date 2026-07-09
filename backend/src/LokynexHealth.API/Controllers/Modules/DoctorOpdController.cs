@@ -7,10 +7,8 @@ namespace LokynexHealth.API.Controllers.Modules;
 [Route("api/doctor-opd")]
 public class DoctorOpdController : ModuleDataControllerBase
 {
-    public DoctorOpdController(
-        IModuleSchemaService moduleSchemaService,
-        IGenericTenantDataService dataService)
-        : base(moduleSchemaService, dataService)
+    public DoctorOpdController(IGenericTenantDataService dataService)
+        : base(dataService)
     {
     }
 

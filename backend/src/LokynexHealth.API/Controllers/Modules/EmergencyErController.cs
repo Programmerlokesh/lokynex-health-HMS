@@ -7,10 +7,8 @@ namespace LokynexHealth.API.Controllers.Modules;
 [Route("api/emergency-er")]
 public class EmergencyErController : ModuleDataControllerBase
 {
-    public EmergencyErController(
-        IModuleSchemaService moduleSchemaService,
-        IGenericTenantDataService dataService)
-        : base(moduleSchemaService, dataService)
+    public EmergencyErController(IGenericTenantDataService dataService)
+        : base(dataService)
     {
     }
 

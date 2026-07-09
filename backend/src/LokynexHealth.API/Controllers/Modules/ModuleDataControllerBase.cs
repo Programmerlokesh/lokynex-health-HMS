@@ -6,32 +6,14 @@ namespace LokynexHealth.API.Controllers.Modules;
 
 public abstract class ModuleDataControllerBase : ControllerBase
 {
-    private readonly IModuleSchemaService _moduleSchemaService;
     private readonly IGenericTenantDataService _dataService;
 
-    protected ModuleDataControllerBase(
-        IModuleSchemaService moduleSchemaService,
-        IGenericTenantDataService dataService)
+    protected ModuleDataControllerBase(IGenericTenantDataService dataService)
     {
-        _moduleSchemaService = moduleSchemaService;
         _dataService = dataService;
     }
 
     protected abstract string ModuleKey { get; }
-
-    [HttpGet("schema")]
-    public IActionResult GetModuleSchema()
-    {
-        var module = _moduleSchemaService.GetModule(ModuleKey);
-        return module is null ? NotFound(new { error = $"Module '{ModuleKey}' was not found." }) : Ok(module);
-    }
-
-    [HttpGet("tables")]
-    public IActionResult GetTables()
-    {
-        var module = _moduleSchemaService.GetModule(ModuleKey);
-        return module is null ? NotFound(new { error = $"Module '{ModuleKey}' was not found." }) : Ok(module.Tables);
-    }
 
     [HttpGet("{tableName}")]
     public async Task<IActionResult> ListRows(
@@ -40,12 +22,6 @@ public abstract class ModuleDataControllerBase : ControllerBase
         [FromQuery] int offset = 0,
         CancellationToken cancellationToken = default)
     {
-        var validation = ValidateTable(tableName);
-        if (validation is not null)
-        {
-            return validation;
-        }
-
         return Ok(await _dataService.ListAsync(tableName, limit, offset, cancellationToken));
     }
 
@@ -55,12 +31,6 @@ public abstract class ModuleDataControllerBase : ControllerBase
         Guid id,
         CancellationToken cancellationToken)
     {
-        var validation = ValidateTable(tableName);
-        if (validation is not null)
-        {
-            return validation;
-        }
-
         var row = await _dataService.GetByIdAsync(tableName, id, cancellationToken);
         return row is null ? NotFound() : Ok(row);
     }
@@ -71,12 +41,6 @@ public abstract class ModuleDataControllerBase : ControllerBase
         [FromBody] JsonElement payload,
         CancellationToken cancellationToken)
     {
-        var validation = ValidateTable(tableName);
-        if (validation is not null)
-        {
-            return validation;
-        }
-
         var id = await _dataService.CreateAsync(tableName, payload, cancellationToken);
         return CreatedAtAction(nameof(GetById), new { tableName, id }, new { id });
     }
@@ -88,12 +52,6 @@ public abstract class ModuleDataControllerBase : ControllerBase
         [FromBody] JsonElement payload,
         CancellationToken cancellationToken)
     {
-        var validation = ValidateTable(tableName);
-        if (validation is not null)
-        {
-            return validation;
-        }
-
         var updated = await _dataService.UpdateAsync(tableName, id, payload, cancellationToken);
         return updated ? NoContent() : NotFound();
     }
@@ -104,34 +62,7 @@ public abstract class ModuleDataControllerBase : ControllerBase
         Guid id,
         CancellationToken cancellationToken)
     {
-        var validation = ValidateTable(tableName);
-        if (validation is not null)
-        {
-            return validation;
-        }
-
         var deleted = await _dataService.DeleteAsync(tableName, id, cancellationToken);
         return deleted ? NoContent() : NotFound();
-    }
-
-    private IActionResult? ValidateTable(string tableName)
-    {
-        var module = _moduleSchemaService.GetModule(ModuleKey);
-        if (module is null)
-        {
-            return NotFound(new { error = $"Module '{ModuleKey}' was not found." });
-        }
-
-        if (!string.Equals(module.SchemaName, "hms", StringComparison.OrdinalIgnoreCase))
-        {
-            return BadRequest(new { error = $"Module '{ModuleKey}' is not a tenant data module." });
-        }
-
-        if (!_moduleSchemaService.TableBelongsToModule(ModuleKey, tableName))
-        {
-            return NotFound(new { error = $"Table '{tableName}' is not part of module '{ModuleKey}'." });
-        }
-
-        return null;
     }
 }

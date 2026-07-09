@@ -7,10 +7,8 @@ namespace LokynexHealth.API.Controllers.Modules;
 [Route("api/patient-portal-telemedicine")]
 public class PatientPortalTelemedicineController : ModuleDataControllerBase
 {
-    public PatientPortalTelemedicineController(
-        IModuleSchemaService moduleSchemaService,
-        IGenericTenantDataService dataService)
-        : base(moduleSchemaService, dataService)
+    public PatientPortalTelemedicineController(IGenericTenantDataService dataService)
+        : base(dataService)
     {
     }
 

@@ -7,10 +7,8 @@ namespace LokynexHealth.API.Controllers.Modules;
 [Route("api/icu-monitoring")]
 public class IcuMonitoringController : ModuleDataControllerBase
 {
-    public IcuMonitoringController(
-        IModuleSchemaService moduleSchemaService,
-        IGenericTenantDataService dataService)
-        : base(moduleSchemaService, dataService)
+    public IcuMonitoringController(IGenericTenantDataService dataService)
+        : base(dataService)
     {
     }
 
