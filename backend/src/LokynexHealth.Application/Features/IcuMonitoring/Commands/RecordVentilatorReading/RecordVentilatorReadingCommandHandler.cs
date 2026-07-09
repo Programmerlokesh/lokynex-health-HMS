@@ -16,10 +16,10 @@ public class RecordVentilatorReadingCommandHandler : IRequestHandler<RecordVenti
 
     public async Task<Guid> Handle(RecordVentilatorReadingCommand request, CancellationToken cancellationToken)
     {
-        var admissionExists = await _context.IcuAdmissions
-            .AnyAsync(a => a.Id == request.IcuAdmissionId, cancellationToken);
+        var icuAdmissionExists = await _context.IcuAdmissions
+            .AnyAsync(i => i.Id == request.IcuAdmissionId, cancellationToken);
 
-        if (!admissionExists)
+        if (!icuAdmissionExists)
         {
             throw new KeyNotFoundException($"ICU admission with Id '{request.IcuAdmissionId}' was not found.");
         }
@@ -29,7 +29,7 @@ public class RecordVentilatorReadingCommandHandler : IRequestHandler<RecordVenti
             IcuAdmissionId = request.IcuAdmissionId,
             Mode = request.Mode,
             Fio2Pct = request.Fio2Pct,
-            PeepCmH2O = request.PeepCmH2O,
+            PeepCmH2O = request.PeepCmh2o,
             TidalVolumeMl = request.TidalVolumeMl
         };
 
