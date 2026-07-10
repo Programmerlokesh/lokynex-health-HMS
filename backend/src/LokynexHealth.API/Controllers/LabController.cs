@@ -5,10 +5,12 @@ using LokynexHealth.Application.Features.Laboratory.Commands.CreateLabOrder;
 using LokynexHealth.Application.Features.Laboratory.Commands.CollectSample;
 using LokynexHealth.Application.Features.Laboratory.Commands.EnterResult;
 using LokynexHealth.Application.Features.Laboratory.Commands.ReleaseLabOrder;
+using LokynexHealth.Application.Features.Laboratory.Commands.GenerateLabInvoice;
 using LokynexHealth.Application.Features.Laboratory.Queries.GetAllLabTests;
 using LokynexHealth.Application.Features.Laboratory.Queries.GetLabOrderById;
 using LokynexHealth.Application.Features.Laboratory.Queries.GetLabOrdersByPatient;
 using LokynexHealth.Application.Features.Laboratory.Queries.GetPendingLabOrders;
+using LokynexHealth.Application.Features.Laboratory.Queries.GetLabReportByOrderId;
 
 namespace LokynexHealth.API.Controllers;
 
@@ -84,5 +86,20 @@ public class LabController : ControllerBase
     {
         await _mediator.Send(new ReleaseLabOrderCommand { OrderId = id });
         return NoContent();
+    }
+
+    [HttpPost("orders/{id:guid}/invoice")]
+    public async Task<IActionResult> GenerateLabInvoice(Guid id, [FromBody] GenerateLabInvoiceCommand command)
+    {
+        command.OrderId = id;
+        var invoiceId = await _mediator.Send(command);
+        return CreatedAtAction("GetInvoiceById", "Billing", new { id = invoiceId }, new { id = invoiceId });
+    }
+
+    [HttpGet("orders/{id:guid}/report")]
+    public async Task<IActionResult> GetLabReport(Guid id)
+    {
+        var report = await _mediator.Send(new GetLabReportByOrderIdQuery { OrderId = id });
+        return report is null ? NotFound() : Ok(report);
     }
 }
